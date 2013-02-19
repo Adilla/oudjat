@@ -29,5 +29,3 @@ class Result(models.Model):
         get_latest_by = 'date'
         order_with_respect_to = 'word'
         order_with_respect_to = 'page'
-    
-    

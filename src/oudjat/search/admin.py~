@@ -1,0 +1,7 @@
+from search.models import Word
+from django.contrib import admin
+
+class WordAdmin(admin.ModelAdmin):
+    fieldsets = [
+        ('Word', {'field': ['word']}),
+        ]

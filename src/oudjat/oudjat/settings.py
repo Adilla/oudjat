@@ -1,5 +1,4 @@
 # Django settings for oudjat project.
-
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
