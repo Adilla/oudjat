@@ -10,7 +10,6 @@ class Page(models.Model):
     
     class Meta:
         verbose_name_plural = 'pages'
-        db_table = 'report_page'
         unique_together = ("path", "sitename")
 
 
@@ -25,7 +24,6 @@ class Result(models.Model):
 
     class Meta:
         verbose_name_plural = 'results'
-        db_table = 'report_model'
         get_latest_by = 'date'
         order_with_respect_to = 'word'
-        order_with_respect_to = 'page'
+    

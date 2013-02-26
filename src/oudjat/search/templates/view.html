@@ -1,0 +1,15 @@
+
+{% if test %}
+<ul>
+  {% for research in test %}
+  <li>{{ research.name }}</li>
+  {% endfor %}
+ </ul>
+{% else %}
+<p>Aucune recherche n'est disponible. </p>
+
+{% endif %}
+<br>
+<br>
+<a href="../add/">Add new research</a>
+

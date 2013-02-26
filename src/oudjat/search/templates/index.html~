@@ -1,0 +1,43 @@
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+
+{% if test %}
+<ul>
+  {% for research in test %}
+  <li>{{ research.name }}</li>
+  {% endfor %}
+ </ul>
+{% else %}
+<p>Aucune recherche n'est disponible. </p>
+
+{% endif %}
+<br>
+<br>
+<p>Add new research</p>
+
+
+
+<form action="{{ search.id }}/" method="post">
+
+
+<label>Word</label>
+<input type="text" name="word" id="word"/>
+<br>
+<br>
+
+{% for choice in dom %}
+  <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}" />
+  <label for="choice{{ forloop.counter }}">{{ choice.name }}</label><br />  
+  
+{% endfor %}
+<br>
+
+{% for option in opt %}
+<input type="checkbox" name="option" id="option{{ forloop.counter }}" value="{{ option.id }}" />
+<label for="option{{ forloop.counter }}">{{ option.name }}</label><br />
+
+{% endfor %}
+
+<br>
+<input type="submit" value="Launch" />
+</form>
