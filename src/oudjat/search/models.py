@@ -15,7 +15,8 @@ class Option(models.Model):
 
 class Word(models.Model):
    expression = models.CharField(max_length=255)
-   options = models.ManyToManyField(Option, related_name = 'words')
+   options = models.ManyToManyField(Option,
+                                    related_name = 'words')
 
    def __unicode__(self):
        return u'%s' % (self.expression)
@@ -27,7 +28,8 @@ class Word(models.Model):
 
 class Domain(models.Model):
    name = models.CharField(max_length=255)
-   words = models.ManyToManyField(Word, related_name = 'domains')
+   words = models.ManyToManyField(Word, 
+                                  related_name = 'domains')
 
    def __unicode__(self):
       return u'%s' % (self.name)
@@ -40,7 +42,8 @@ class Domain(models.Model):
 class Research(models.Model):
    name = models.CharField(max_length=255)
    cron = models.CharField(max_length=255)
-   domains = models.ManyToManyField(Domain, related_name = 'researches')
+   domains = models.ManyToManyField(Domain, 
+                                    related_name = 'researches')
 
    def __unicode__(self):
       return u'%s' % (self.name)

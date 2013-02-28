@@ -1,0 +1,10 @@
+from django_cron import cronScheduler, Job
+
+class CheckMail(Job):
+
+    run_every = 300
+
+    def job(self):
+        check_feedback_mailbox()
+
+cronScheduler.register(CheckMail)

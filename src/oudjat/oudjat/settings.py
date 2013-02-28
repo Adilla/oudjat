@@ -119,6 +119,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
+    'django_crontab',
     'report',
     'search',
 )
@@ -151,3 +152,8 @@ LOGGING = {
         },
     }
 }
+
+
+CRONJOBS = [
+    ('*/5 * * * *', 'search.cron.launch_research') 
+    ]

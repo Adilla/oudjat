@@ -28,10 +28,8 @@ def clean(self):
 
 def detail(request, search_id):
 
-    return render_to_response('details.html', {'search': w })
-
-
-
+    return render_to_response('details.html',
+                              {'search': w })
 
 def view(request):
 
@@ -46,10 +44,10 @@ def view(request):
 
 class AddForm(forms.Form):
     word = forms.CharField(max_length=255)
-    domain = forms.ChoiceField(widget=RadioSelect(), choices=DOMAINS)
-    option = forms.MultipleChoiceField(widget=CheckboxSelectMultiple(), choices=OPTIONS)
-
-
+    domain = forms.ChoiceField(widget=RadioSelect(), 
+                               choices=DOMAINS)
+    option = forms.MultipleChoiceField(widget=CheckboxSelectMultiple(), 
+                                       choices=OPTIONS)
 
 
 def add(request):
@@ -79,7 +77,10 @@ def add(request):
    else:
        form = AddForm()
 
-   return render_to_response('add.html', {'form' : form,}, context_instance=RequestContext(request))
+   return render_to_response('add.html',
+                             {'form' : form,}, 
+                             context_instance=RequestContext(request)
+                             )
         
 
 #def clean_words(self):
