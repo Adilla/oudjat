@@ -48,3 +48,5 @@ class Research(models.Model):
    class Meta:
       verbose_name_plural = 'researches'
 
+
+

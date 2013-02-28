@@ -2,10 +2,11 @@
 
 
 
-<form action="view/" method="post">
+<form action="../add/" method="post">{% csrf_token %}
 
+{{ form.as_p }}
 
-<label>Word</label>
+<!--label>Word</label>
 <input type="text" name="word" id="word"/>
 <br>
 <br>
@@ -23,6 +24,6 @@
 
 {% endfor %}
 
-<br>
+<br-->
 <input type="submit" value="Launch" />
 </form>
