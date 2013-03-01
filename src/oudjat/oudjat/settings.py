@@ -153,7 +153,3 @@ LOGGING = {
     }
 }
 
-
-CRONJOBS = [
-    ('*/5 * * * *', 'search.cron.launch_research') 
-    ]
