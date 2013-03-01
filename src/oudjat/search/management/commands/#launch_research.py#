@@ -7,6 +7,7 @@ class Command(NoArgsCommand):
     help = 'Launches all researches'
 
     def handle_noargs(self, **options):
+        
         # service = build("customsearch", "v1",
         #                 developerKey="AIzaSyBGCWOxtQZomkXAVSLmyg1XI_obyTe5P4E")
 
