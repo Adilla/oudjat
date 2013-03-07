@@ -28,8 +28,7 @@ class Word(models.Model):
 
 class Domain(models.Model):
    name = models.CharField(max_length=255)
-   words = models.ManyToManyField(Word, 
-                                  related_name = 'domains')
+   key = models.CharField(max_length=255)
 
    def __unicode__(self):
       return u'%s' % (self.name)
@@ -42,6 +41,7 @@ class Domain(models.Model):
 class Research(models.Model):
    name = models.CharField(max_length=255)
    cron = models.CharField(max_length=255)
+   words = models.CharField(max_length=255)
    domains = models.ManyToManyField(Domain, 
                                     related_name = 'researches')
 
