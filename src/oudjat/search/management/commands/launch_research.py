@@ -13,38 +13,42 @@ class Command(NoArgsCommand):
 
     def handle_noargs(self, **options):
 
-        os.mkdir('/home/adilla/Bureau/tmp_research_files/')
+        # try:
+        #     os.mkdir('/home/adilla/Bureau/tmp_research_files/')
+        # except OSError:
+        #     print 'Could not create new directory'
+            
         service = build("customsearch", "v1",
                         developerKey="AIzaSyBGCWOxtQZomkXAVSLmyg1XI_obyTe5P4E")
 
         for word in Word.objects.all():
             w = word.expression
 
-            # res = service.cse().list(
-            #     q = w,
-            #     cx = '006966613857663466729:_k1q5ucd9eg',
-            #     ).execute()
+            res = service.cse().list(
+                q = w,
+                cx = '006966613857663466729:_k1q5ucd9eg',
+                ).execute()
 
-            # with open('/home/adilla/Bureau/'+ w + '_1', 'w') as f:
-            #     json.dump(res, f, indent = 4)
+            with open('/home/adilla/Bureau/'+ w + '_1', 'w') as f:
+                json.dump(res, f, indent = 4)
              
-            # if 'queries' in res:
-            #     tmp = res['queries']
+            if 'queries' in res:
+                tmp = res['queries']
                 
-            #     cmpt = 2
+                cmpt = 2
                 
-            #     if 'nextPage' in tmp:
-            #         tmp = res['queries']['nextPage'][0]['startIndex']
-            #         next_response = service.cse().list(
-            #             q = w,
-            #             cx = '006966613857663466729:_k1q5ucd9eg',
-            #             num = 10,
-            #             start = tmp,
-            #             ).execute()
-            #         with open('/home/adilla/Bureau/' + w + '_' + str(cmpt), 'w') as f:
-            #             json.dump(next_response, f, indent = 4)
+                if 'nextPage' in tmp:
+                    tmp = res['queries']['nextPage'][0]['startIndex']
+                    next_response = service.cse().list(
+                        q = w,
+                        cx = '006966613857663466729:_k1q5ucd9eg',
+                        num = 10,
+                        start = tmp,
+                        ).execute()
+                    with open('/home/adilla/Bureau/' + w + '_' + str(cmpt), 'w') as f:
+                        json.dump(next_response, f, indent = 4)
 
-             #  json.dump(next_response, f, indent = 4)
+            
 
             cmpt = 1
        
@@ -57,32 +61,40 @@ class Command(NoArgsCommand):
                         
                     i = 0
                     print '/home/adilla/Bureau/'+ w + '_' + str_cmpt
-                    print len(t["items"])
-                    while (i < len(t["items"])):
-                        test = t["items"][i]["link"]
-                        test2 = t["items"][i]["displayLink"]
-                        string = re.sub('http://' + test2 + '/', '', test)
-                        print string
-                        Page.objects.get_or_create(path = string, 
-                                                   sitename = test2)
-                        p = Page.objects.get(path = string, sitename = test2)
-                     
-                       # Result.objects.get_or_create(word = w, page = p, date = timezone.now())
-                        print p
-                        i = i + 1
-                                
-                    f.close()
-                    cmpt = cmpt + 1
-        
+                    if 'items' in t:
+                        print len(t["items"])
+                        while (i < len(t["items"])):
+                            test = t["items"][i]["link"]
+                            test2 = t["items"][i]["displayLink"]
+                            string = re.sub('http://' + test2 + '/', '', test)
+                            print string
+                            Page.objects.get_or_create(path = string, 
+                                                       sitename = test2)
+                            p = Page.objects.get(path = string, sitename = test2)
+                            
+                            ww = Word.objects.get(expression = w)
+                            r = Result(word = ww, page = p, occurences = 0, date = timezone.now())
+                            r.save()
+                            
+                            i = i + 1
+                            
+                            f.close()
+                #    os.remove('/home/adilla/Bureau/' + w + '_' + str_cmpt)
+                            cmpt = cmpt + 1
+                    else:
+                        cmpt = cmpt + 1
+                            
                 else:
                     break
 
 
-
-
-                
+                # try:
+                #     os.rmdir('/home/adilla/Bureau/tmp_research_files/')
+                # except OSError:
+                #     print 'Could not delete directory'
                 
                     
+        
                     
 
  

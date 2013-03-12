@@ -27,6 +27,7 @@ urlpatterns = patterns('search.views',
                        url(r'^search/$', 'index'),
                        url(r'^search/view/$', 'view'),
                        url(r'^search/add/$', 'add'),
+                       url(r'^search/results/$', 'results'),
                        url(r'^admin/', include(admin.site.urls)),
 
 )

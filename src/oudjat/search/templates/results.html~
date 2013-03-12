@@ -1,0 +1,13 @@
+{% if r %}
+<ul>
+  {% for result in r %}
+  <li>{{ result.page }}</li>
+  {% endfor %}
+</ul>
+{% else %}
+<p> Aucun resultat n'est disponible </p>
+
+{% endif %}
+<br>
+<br>
+<a href="../">Back</a>

@@ -2,6 +2,7 @@
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.template import Context, loader
 from search.models import Word, Domain, Research, Option
+from report.models import *
 from django import forms
 from django.core.validators import validate_email
 from django.shortcuts import render, render_to_response
@@ -10,7 +11,7 @@ from django.forms.widgets import RadioSelect, CheckboxSelectMultiple
 from django.template import RequestContext
 
 DOMAINS = [(d.id, d.name) for d in Domain.objects.all()]
-OPTIONS = [(o.id, o.name) for o in Option.objects.all()]
+#OPTIONS = [(o.id, o.name) for o in Option.objects.all()]
 
 def index(request):
     t = loader.get_template('index.html')
@@ -40,14 +41,21 @@ def view(request):
             })
     return HttpResponse(t.render(c))
 
+def results(request):
+    r = Result.objects.all()
+    t = loader.get_template('results.html')
+    c = Context({
+            'r' : r,
+            })
+    return HttpResponse(t.render(c))
 
 
 class AddForm(forms.Form):
     word = forms.CharField(max_length=255)
     domain = forms.ChoiceField(widget=RadioSelect(), 
                                choices=DOMAINS)
-    option = forms.MultipleChoiceField(widget=CheckboxSelectMultiple(), 
-                                       choices=OPTIONS)
+   # option = forms.MultipleChoiceField(widget=CheckboxSelectMultiple(), 
+   #                                    choices=OPTIONS)
 
 
 def add(request):
@@ -58,14 +66,14 @@ def add(request):
        if form.is_valid():
            word = form.cleaned_data['word']
            domain = form.cleaned_data['domain']
-           option = form.cleaned_data['option']
+ #          option = form.cleaned_data['option']
 
            w = Word(expression = word)
            w.save()
 
-           for opt in option:
-               o = Option.objects.filter(id = opt)
-               w.options.add(o.get(pk = opt))
+           # for opt in option:
+           #     o = Option.objects.filter(id = opt)
+           #     w.options.add(o.get(pk = opt))
 
            r = Research(name = word)
            r.save()
