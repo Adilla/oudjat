@@ -45,6 +45,7 @@ class Research(models.Model):
    domains = models.ManyToManyField(Domain, 
                                     related_name = 'researches')
 
+
    def __unicode__(self):
       return u'%s' % (self.name)
 

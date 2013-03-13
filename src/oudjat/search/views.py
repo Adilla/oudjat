@@ -42,7 +42,8 @@ def view(request):
     return HttpResponse(t.render(c))
 
 def results(request):
-    r = Result.objects.all()
+    r = Page.objects.values('sitename').distinct()
+ 
     t = loader.get_template('results.html')
     c = Context({
             'r' : r,
@@ -75,7 +76,7 @@ def add(request):
            #     o = Option.objects.filter(id = opt)
            #     w.options.add(o.get(pk = opt))
 
-           r = Research(name = word)
+           r = Research(name = word, words = word)
            r.save()
             
            d = Domain.objects.filter(id = domain)
