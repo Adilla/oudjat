@@ -2,6 +2,17 @@
 <ul>
   {% for result in r %}
   <li>{{ result.sitename }}</li>
+  <ul>
+   {% for ddate in d %}
+   <li>{{ ddate.date }}</li>
+   {% endfor %}
+
+    <!-- {% for ppath in p %} -->
+    <!-- {% if ppath.sitename == result.sitename %} -->
+    <!-- <li>{{ ppath.path }}</li> -->
+    <!-- {% endif %} -->
+    <!-- {% endfor %} -->
+  </ul>
    {% endfor %}
 </ul>
 {% else %}

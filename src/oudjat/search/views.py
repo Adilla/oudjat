@@ -41,12 +41,17 @@ def view(request):
             })
     return HttpResponse(t.render(c))
 
+
 def results(request):
     r = Page.objects.values('sitename').distinct()
- 
+    p = Page.objects.all()
+    d = Result.objects.order_by('date').distinct()
+         
     t = loader.get_template('results.html')
     c = Context({
             'r' : r,
+            'p' : p,
+            'd' : d,
             })
     return HttpResponse(t.render(c))
 
