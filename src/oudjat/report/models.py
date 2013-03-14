@@ -26,4 +26,3 @@ class Result(models.Model):
         verbose_name_plural = 'results'
         get_latest_by = 'date'
         order_with_respect_to = 'word'
-    

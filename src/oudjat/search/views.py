@@ -43,15 +43,18 @@ def view(request):
 
 
 def results(request):
-    r = Page.objects.values('sitename').distinct()
+    all_results = Result.objects.all()
+    all_pages_sitename = Page.objects.values('sitename').distinct()
     p = Page.objects.all()
-    d = Result.objects.order_by('date').distinct()
-         
+    d = Result.objects.values('date').order_by('date').distinct()
+    pageid = Result.objects.all()      
     t = loader.get_template('results.html')
     c = Context({
-            'r' : r,
+            'all_results' : all_results,
+            'all_pages_sitename' : all_pages_sitename,
             'p' : p,
             'd' : d,
+            'pageid' : pageid,
             })
     return HttpResponse(t.render(c))
 
