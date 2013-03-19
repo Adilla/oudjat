@@ -42,22 +42,41 @@ def view(request):
     return HttpResponse(t.render(c))
 
 
-def results(request):
-    all_results = Result.objects.all()
-    all_pages_sitename = Page.objects.values('sitename').distinct()
-    p = Page.objects.all()
-    d = Result.objects.values('date').order_by('date').distinct()
-    pageid = Result.objects.all()      
-    t = loader.get_template('results.html')
-    c = Context({
-            'all_results' : all_results,
-            'all_pages_sitename' : all_pages_sitename,
-            'p' : p,
-            'd' : d,
-            'pageid' : pageid,
-            })
-    return HttpResponse(t.render(c))
+# def results(request):
+#     liste = []
+#     all_results = Result.objects.all()
+#     all_pages = Page.objects.values('sitename').distinct()
+#     paths = Page.objects.all()
+#     dates = Result.objects.values('date').order_by('date').distinct()
+#     test = Result.objects.raw('select distinct report_page.path from report_page, report_result where report_result.page_id = report_page.id and report_page.sitename = %s and report_result.date = %s', [tmp, tmp2]);
 
+#     t = loader.get_template('results.html')
+#     c = Context({
+#             'all_results' : all_results,
+#             'all_pages' : all_pages,
+#             'paths' : paths,
+#             'dates' : dates,
+#             'test' : test,
+#             'liste' : liste,
+#             })
+#     return HttpResponse(t.render(c))
+
+
+def results(request):
+    paths = Page.objects.all()
+    all_pages = Page.objects.values('sitename').distinct()
+    dates = Result.objects.dates('date', 'day', order = 'DESC')
+     
+    return render(request, 
+                  'results.html', 
+                  {'paths' : paths,
+                   'all_pages' : all_pages,
+                   'dates' : dates,
+                   })
+
+def details(request, year, month, day):
+    all_pages = Page.objects.filter(result__date = date(year, month, day)) 
+    return render(request, 'details.html', {})
 
 class AddForm(forms.Form):
     word = forms.CharField(max_length=255)

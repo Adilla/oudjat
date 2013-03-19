@@ -1,28 +1,15 @@
-{% if all_results %}
+{% if dates %}
 <ul>
-  {% for name in all_pages_sitename %}
-  <li>{{ name.sitename }}</li>
-  <ul>
-   <!-- {% for ddate in d %} -->
-   <!--   <li>{{ ddate.date }}</li> -->
-   <!--   <ul> -->
-   <!--     {% for  -->
-   <!-- {% endfor %} -->
-   <!-- {% for tmp in p %} -->
-   <!-- <\!-- {% for path in all_results  %} -\-> -->
-   <!-- <\!-- {% if tmp.id == path.page and tmp.sitename == sitename.sitename %}  -\-> -->
-   <!-- <\!-- <li>{{ ppath.path }}</li> -\-> -->
-   <!-- <li>{{ tmp.id }}</li> -->
-   <!-- <\!-- {% endif %} -\-> -->
-   <!-- <\!-- {% endfor %} -\-> -->
-   <!-- {% endfor %} -->
-  </ul>
+  
+  {% for date in dates  %}
+  <li>{{ date.year }}/{{ date.month }}/{{ date.day }}</li>
+  <a href="{% url 'details_for_report' year=date.year month=date.month day=date.day %}">go</a>
   {% endfor %}
+  {% else %}
+  <p> Aucun resultat n'est disponible </p>
 </ul>
-{% else %}
-<p> Aucun resultat n'est disponible </p>
-
 {% endif %}
+
 <br>
 <br>
 <a href="../">Back to index</a>
