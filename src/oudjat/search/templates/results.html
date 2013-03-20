@@ -3,7 +3,7 @@
   
   {% for date in dates  %}
   <li>{{ date.year }}/{{ date.month }}/{{ date.day }}</li>
-  <a href="{% url 'details_for_report' year=date.year month=date.month day=date.day %}">go</a>
+  <a href="{% url details_test year=date.year month=date.month day=date.day %}">go</a>
   {% endfor %}
   {% else %}
   <p> Aucun resultat n'est disponible </p>

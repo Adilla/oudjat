@@ -1,5 +1,6 @@
 # Create your views here.
 from django.http import HttpResponse, Http404, HttpResponseRedirect
+from django.core.urlresolvers import reverse
 from django.template import Context, loader
 from search.models import Word, Domain, Research, Option
 from report.models import *
@@ -9,6 +10,7 @@ from django.shortcuts import render, render_to_response
 from django.forms.fields import ChoiceField, MultipleChoiceField
 from django.forms.widgets import RadioSelect, CheckboxSelectMultiple
 from django.template import RequestContext
+import datetime
 
 DOMAINS = [(d.id, d.name) for d in Domain.objects.all()]
 #OPTIONS = [(o.id, o.name) for o in Option.objects.all()]
@@ -27,11 +29,6 @@ def clean(self):
     return data
 
 
-def detail(request, search_id):
-
-    return render_to_response('details.html',
-                              {'search': w })
-
 def view(request):
 
     test = Research.objects.all()
@@ -41,25 +38,6 @@ def view(request):
             })
     return HttpResponse(t.render(c))
 
-
-# def results(request):
-#     liste = []
-#     all_results = Result.objects.all()
-#     all_pages = Page.objects.values('sitename').distinct()
-#     paths = Page.objects.all()
-#     dates = Result.objects.values('date').order_by('date').distinct()
-#     test = Result.objects.raw('select distinct report_page.path from report_page, report_result where report_result.page_id = report_page.id and report_page.sitename = %s and report_result.date = %s', [tmp, tmp2]);
-
-#     t = loader.get_template('results.html')
-#     c = Context({
-#             'all_results' : all_results,
-#             'all_pages' : all_pages,
-#             'paths' : paths,
-#             'dates' : dates,
-#             'test' : test,
-#             'liste' : liste,
-#             })
-#     return HttpResponse(t.render(c))
 
 
 def results(request):
@@ -75,8 +53,14 @@ def results(request):
                    })
 
 def details(request, year, month, day):
-    all_pages = Page.objects.filter(result__date = date(year, month, day)) 
-    return render(request, 'details.html', {})
+   
+    all_pages = Page.objects.filter(pages__date = datetime.date(int(year),
+                                                                int(month), 
+                                                                int(day))).distinct() 
+    return render(request, 'details.html', {
+            'all_pages' : all_pages,
+            })
+
 
 class AddForm(forms.Form):
     word = forms.CharField(max_length=255)

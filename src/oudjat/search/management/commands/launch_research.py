@@ -30,7 +30,7 @@ class Command(NoArgsCommand):
             #     q = w,
             #     cx = '006966613857663466729:_k1q5ucd9eg',
             #  #   cx = dkey
-            #     )
+            #     ).execute()
 
             # with open('/home/adilla/Bureau/'+ w + '_1', 'w') as f:
             #     json.dump(res, f, indent = 4)
@@ -91,18 +91,21 @@ class Command(NoArgsCommand):
                             p = Page.objects.get(path = string, sitename = test2)
                             
                             ww = Word.objects.get(expression = w)
-                            r = Result(word = ww, page = p, occurences = occ, date = timezone.now())
-                            r.save()
-                            
+                            Result.objects.get_or_create(word = ww, 
+                                                         page = p, 
+                                                         occurences = occ, 
+                                                         date = timezone.now())
+                                          
                             
                             i = i + 1
                             
                             f.close()
-                #    os.remove('/home/adilla/Bureau/' + w + '_' + str_cmpt)
-                            cmpt = cmpt + 1
+                            if os.path.exists('/home/adilla/Bureau/' + w + '_' + str_cmpt):
+                                os.remove('/home/adilla/Bureau/' + w + '_' + str_cmpt)
+                                cmpt = cmpt + 1
+                                
                     else:
-                        cmpt = cmpt + 1
-                            
+                     cmpt = cmpt + 1       
                 else:
                     break
 

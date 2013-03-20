@@ -28,7 +28,7 @@ urlpatterns = patterns('search.views',
                        url(r'^search/view/$', 'view'),
                        url(r'^search/add/$', 'add'),
                        url(r'^search/results/$', 'results'),
-                       url(r'^search/results/(?P<year>\d{4})/(?P<month>\d{2})/(?P<day>\d{2})/$', 'details', name = "details_for_report"),
+                       url(r'^search/results/(?P<year>\d{4})/(?P<month>\d{1,2})/(?P<day>\d{1,2})/$', 'details', name='details_test'),
                        url(r'^admin/', include(admin.site.urls)),
 
 )

@@ -1,1 +1,14 @@
-<p>test</p>
+{% if all_pages %}
+<ul>
+  {% for page in all_pages %}
+  <li>{{ page.sitename }}/{{ page.path }}</li>
+  {% endfor %}
+  {% else %}
+  <p> No result available </p>
+</ul>
+{% endif %}
+
+
+<br>
+<br>
+<a href="../">Back to previous page</a>
