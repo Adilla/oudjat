@@ -1,0 +1,15 @@
+{% if all_paths %}
+<ul>
+  
+  {% for path in all_paths  %}
+  <li>{{ path.path }}
+   </li>
+  {% endfor %}
+  {% else %}
+  <p> Aucun resultat n'est disponible </p>
+</ul>
+{% endif %}
+
+<br>
+<br>
+<a href="../">Back to index</a>

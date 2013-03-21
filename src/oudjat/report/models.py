@@ -4,6 +4,7 @@ from django.db import models
 class Page(models.Model):
     path = models.CharField(max_length=255)
     sitename = models.CharField(max_length=255)
+    ticket = models.BooleanField()
 
     def __unicode__(self):
         return u'%s/%s' % (self.sitename, self.path)

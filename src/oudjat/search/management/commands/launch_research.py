@@ -3,10 +3,12 @@ from django.core.management.base import NoArgsCommand, CommandError
 from search.models import *
 from report.models import *
 from apiclient.discovery import build
+import report.models
 import json
 import pprint
 import re, os, shutil, urllib
 from django.utils import timezone
+import _mysql_exceptions
 
 
 class Command(NoArgsCommand):
@@ -22,37 +24,20 @@ class Command(NoArgsCommand):
         service = build("customsearch", "v1",
                         developerKey="AIzaSyBGCWOxtQZomkXAVSLmyg1XI_obyTe5P4E")
 
-        for word in Word.objects.all():
-            w = word.expression
-                    
+        for research in Research.objects.all():
+            w = research.words
+       
+        
+            res = service.cse().list(
+                q = w,
+                cx = '006966613857663466729:_k1q5ucd9eg',
+             #   cx = dkey
+                ).execute()
 
-            # res = service.cse().list(
-            #     q = w,
-            #     cx = '006966613857663466729:_k1q5ucd9eg',
-            #  #   cx = dkey
-            #     ).execute()
-
-            # with open('/home/adilla/Bureau/'+ w + '_1', 'w') as f:
-            #     json.dump(res, f, indent = 4)
+            with open('/home/adilla/Bureau/'+ w + '_1', 'w') as f:
+                json.dump(res, f, indent = 4)
              
-            # if 'queries' in res:
-            #     tmp = res['queries']
-                
-            #     cmpt = 2
-                
-            #     if 'nextPage' in tmp:
-            #         tmp = res['queries']['nextPage'][0]['startIndex']
-            #         next_response = service.cse().list(
-            #             q = w,
-            #             cx = '006966613857663466729:_k1q5ucd9eg',
-            #      #       cx = key
-            #             num = 10,
-            #             start = tmp,
-            #             ).execute()
-            #         with open('/home/adilla/Bureau/' + w + '_' + str(cmpt), 'w') as f:
-            #             json.dump(next_response, f, indent = 4)
-
-            
+         
 
             cmpt = 1
        
@@ -70,7 +55,11 @@ class Command(NoArgsCommand):
                         while (i < len(t["items"])):
                             test = t["items"][i]["link"]
                             test2 = t["items"][i]["displayLink"]
-                            string = re.sub('http://' + test2 + '/', '', test)
+                            check = test.find('https')
+                            if (check > 0):
+                                string = re.sub('https://' + test2 + '/', '', test)
+                            else:
+                                string = re.sub('http://' + test2 + '/', '', test)
                             print string
                           
                             occ = 0
@@ -86,16 +75,22 @@ class Command(NoArgsCommand):
                             #         except UnicodeDecodeError:
                             #             print 'error for ' + strpage
   
-                            Page.objects.get_or_create(path = string, 
-                                                       sitename = test2)
-                            p = Page.objects.get(path = string, sitename = test2)
-                            
-                            ww = Word.objects.get(expression = w)
-                            Result.objects.get_or_create(word = ww, 
-                                                         page = p, 
-                                                         occurences = occ, 
-                                                         date = timezone.now())
-                                          
+                            try:
+                                Page.objects.get_or_create(path = string, 
+                                                           sitename = test2, ticket= 'false')
+                              
+                                p = Page.objects.get(path = string, sitename = test2)
+                                
+                                ww = Word.objects.get(expression = w)
+                                
+                                Result.objects.get_or_create(word = ww, 
+                                                             page = p, 
+                                                             occurences = occ, 
+                                                             date = timezone.now())
+
+                            except _mysql_exceptions.Warning:
+                                print 'mysql exception'
+                                         
                             
                             i = i + 1
                             

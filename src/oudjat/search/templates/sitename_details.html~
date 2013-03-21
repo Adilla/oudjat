@@ -9,7 +9,6 @@
   {% else %}
   <p> Aucun resultat n'est disponible </p>
 </ul>
-
 {% endif %}
 
 <br>

@@ -41,25 +41,28 @@ def view(request):
 
 
 def results(request):
-    paths = Page.objects.all()
-    all_pages = Page.objects.values('sitename').distinct()
     dates = Result.objects.dates('date', 'day', order = 'DESC')
      
-    return render(request, 
-                  'results.html', 
-                  {'paths' : paths,
-                   'all_pages' : all_pages,
-                   'dates' : dates,
-                   })
+    return render(request, 'results.html', {
+            'dates' : dates,
+            })
 
-def details(request, year, month, day):
+def report_details(request, year, month, day):
    
-    all_pages = Page.objects.filter(pages__date = datetime.date(int(year),
-                                                                int(month), 
-                                                                int(day))).distinct() 
+    y = int(year)
+    m = int(month)
+    d = int(day)
+    
+    all_pages = Page.objects.filter(
+        pages__date = datetime.date(y,m,d)
+        ).distinct()
+    
+    
+    
     return render(request, 'details.html', {
             'all_pages' : all_pages,
             })
+
 
 
 class AddForm(forms.Form):

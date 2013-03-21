@@ -1,7 +1,12 @@
 {% if all_pages %}
 <ul>
   {% for page in all_pages %}
-  <li>{{ page.sitename }}/{{ page.path }}</li>
+  <li>
+    <a href="{{ page.sitename }}/{{ page.path }}">{{ page.sitename }}/{{ page.path }}</a>
+    <form method="post">
+       <input type="submit" value="RT" />
+   </form>
+  </li>
   {% endfor %}
   {% else %}
   <p> No result available </p>
@@ -11,4 +16,4 @@
 
 <br>
 <br>
-<a href="../">Back to previous page</a>
+<a href="../../../">Back to previous page</a>
