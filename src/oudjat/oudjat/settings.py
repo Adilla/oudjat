@@ -158,5 +158,5 @@ EMAIL_HOST = 'localhost'
 EMAIL_PORT = 1025
 
 
-FILE_RT = 'test'
+FILE_RT = 'Services_Metiers'
 

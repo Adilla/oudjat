@@ -3,9 +3,10 @@
   {% for page in all_pages %}
   <li>
     <a href="{{ page.sitename }}/{{ page.path }}">{{ page.sitename }}/{{ page.path }}</a>
-    <form method="post">
+    <form action="../../../" method="post">{% csrf_token %}
        <input type="submit" value="RT" />
    </form>
+   
   </li>
   {% endfor %}
   {% else %}

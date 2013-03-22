@@ -9,6 +9,7 @@ class PageAdmin(admin.ModelAdmin):
     fieldsets = [
         (None,   {'fields': ['sitename']}),
         ('Path', {'fields': ['path']}),
+        ('Request Tracker sent', {'fields' : ['ticket']}),
       ]
 
 admin.site.register(Result, ResultAdmin)

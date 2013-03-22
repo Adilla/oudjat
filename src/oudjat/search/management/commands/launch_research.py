@@ -77,7 +77,7 @@ class Command(NoArgsCommand):
   
                             try:
                                 Page.objects.get_or_create(path = string, 
-                                                           sitename = test2, ticket= 'false')
+                                                           sitename = test2)
                               
                                 p = Page.objects.get(path = string, sitename = test2)
                                 

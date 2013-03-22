@@ -5,12 +5,14 @@ from django.template import Context, loader
 from search.models import Word, Domain, Research, Option
 from report.models import *
 from django import forms
+from django.conf import settings
 from django.core.validators import validate_email
 from django.shortcuts import render, render_to_response
 from django.forms.fields import ChoiceField, MultipleChoiceField
 from django.forms.widgets import RadioSelect, CheckboxSelectMultiple
 from django.template import RequestContext
-import datetime
+import datetime, rt
+
 
 DOMAINS = [(d.id, d.name) for d in Domain.objects.all()]
 #OPTIONS = [(o.id, o.name) for o in Option.objects.all()]
@@ -57,11 +59,44 @@ def report_details(request, year, month, day):
         pages__date = datetime.date(y,m,d)
         ).distinct()
     
+    if request.method == 'POST':
+        # login = 'susungiadilla'
+        # passw = 'Juges45DvOra1989'
+        
+        
+        # tracker = rt.Rt('http://rtdev.unistra.fr/rt/REST/1.0/', login, passw)
+        # tracker.login()
+        # num_track = tracker.create_ticket(Queue = settings.FILE_RT, 
+        #                       Subject = 'test',
+        #                       Text = 'test',
+        #                       )
+        # tracker.edit_ticket(num_track, Requestors = 'susungiadilla@unistra.fr')
+
+        # tracker.logout()
+
+
+        login = 'admin'
+        passw = 'admin'
+
+        tracker = rt.Rt('http://rt.easter-eggs.org/demos/testing/REST/1.0/', 'admin', 'admin')
+
+        if tracker.login() == True:
+            num_track = tracker.create_ticket(Queue='Customer Service', 
+                                              Subject = 'testint rrt', 
+                                              Text = 'Testing rtt python',
+                                              )
+            tracker.edit_ticket(num_track, 
+                                Requestors = 'admin@no-mail.com')
+
+            tracker.logout()
+
+        return HttpResponseRedirect('../../../')
     
     
-    return render(request, 'details.html', {
-            'all_pages' : all_pages,
-            })
+    return render_to_response('details.html', 
+                             { 'all_pages' : all_pages,
+                              },
+                             context_instance = RequestContext(request))
 
 
 
