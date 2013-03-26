@@ -70,14 +70,16 @@ def report_details(request, year, month, day):
 class TicketForm(forms.Form):
     subject = forms.CharField(max_length = 255)
     queue = forms.CharField(max_length = 255)
-    text = forms.CharField(max_length = 255)
+    text = forms.CharField(max_length = 1000)
     requestor = forms.CharField(max_length = 255)
 
 
 def ticket(request, year, month, day, pageid):
     
+    page = Page.objects.get(pk = int(pageid))
+
     if request.method == 'POST':
-        form_t = TicketForm(request.POST)
+        form = TicketForm(request.POST)
        
         if form.is_valid():
             subject = form.cleaned_data['subject']
@@ -86,27 +88,31 @@ def ticket(request, year, month, day, pageid):
             requestor = form.cleaned_data['requestor']
 
 
-            return HttpResponseRedirect('')
+            return HttpResponseRedirect('../')
     else:
-        form_t = TicketForm()
-        # login = 'admin'
-        # passw = 'admin'
-        # test = 1
+        form = TicketForm(initial={'subject': page.sitename,
+                                   'queue': settings.FILE_RT,
+                                   'text': page.path,
+                                   'requestor': 'admin@no-mail.com'})
+        
+        login = 'admin'
+        passw = 'admin'
+ 
 
-        # tracker = rt.Rt('http://rt.easter-eggs.org/demos/testing/REST/1.0/', 'admin', 'admin')
+        tracker = rt.Rt('', login, passw)
 
-        # if tracker.login() == True:
-        #     num_track = tracker.create_ticket(Queue='Customer Service', 
-        #                                       Subject = 'test', 
-        #                                       Text = 'test',
-        #                                       )
-        #     tracker.edit_ticket(num_track, 
-        #                         Requestors = 'admin@no-mail.com')
+        if tracker.login() == True:
+            num_track = tracker.create_ticket(Queue='Support', 
+                                              Subject = 'test', 
+                                              Text = 'test',
+                                              )
+            tracker.edit_ticket(num_track, 
+                                Requestors = 'test')
 
-        #     tracker.logout()
+            tracker.logout()
 
     return render_to_response('ticket.html',
-                              {},
+                              {'form' : form},
                               context_instance = RequestContext(request))
 
 
