@@ -1,7 +1,7 @@
 # Create your views here.
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.core.urlresolvers import reverse
-from django.template import Context, loader
+from django.template import Context, loader, RequestContext
 from search.models import Word, Domain, Research, Option
 from report.models import *
 from django import forms
@@ -10,7 +10,6 @@ from django.core.validators import validate_email
 from django.shortcuts import render, render_to_response
 from django.forms.fields import ChoiceField, MultipleChoiceField
 from django.forms.widgets import RadioSelect, CheckboxSelectMultiple
-from django.template import RequestContext
 import datetime, rt
 
 
@@ -58,45 +57,57 @@ def report_details(request, year, month, day):
     all_pages = Page.objects.filter(
         pages__date = datetime.date(y,m,d)
         ).distinct()
-    
-    if request.method == 'POST':
-        # login = 'susungiadilla'
-        # passw = 'Juges45DvOra1989'
-        
-        
-        # tracker = rt.Rt('http://rtdev.unistra.fr/rt/REST/1.0/', login, passw)
-        # tracker.login()
-        # num_track = tracker.create_ticket(Queue = settings.FILE_RT, 
-        #                       Subject = 'test',
-        #                       Text = 'test',
-        #                       )
-        # tracker.edit_ticket(num_track, Requestors = 'susungiadilla@unistra.fr')
-
-        # tracker.logout()
-
-
-        login = 'admin'
-        passw = 'admin'
-
-        tracker = rt.Rt('http://rt.easter-eggs.org/demos/testing/REST/1.0/', 'admin', 'admin')
-
-        if tracker.login() == True:
-            num_track = tracker.create_ticket(Queue='Customer Service', 
-                                              Subject = 'testint rrt', 
-                                              Text = 'Testing rtt python',
-                                              )
-            tracker.edit_ticket(num_track, 
-                                Requestors = 'admin@no-mail.com')
-
-            tracker.logout()
-
-        return HttpResponseRedirect('../../../')
-    
-    
+   
     return render_to_response('details.html', 
                              { 'all_pages' : all_pages,
+                               'y' : y,
+                               'm' : m,
+                               'd' : d,
                               },
                              context_instance = RequestContext(request))
+
+
+class TicketForm(forms.Form):
+    subject = forms.CharField(max_length = 255)
+    queue = forms.CharField(max_length = 255)
+    text = forms.CharField(max_length = 255)
+    requestor = forms.CharField(max_length = 255)
+
+
+def ticket(request, year, month, day, pageid):
+    
+    if request.method == 'POST':
+        form_t = TicketForm(request.POST)
+       
+        if form.is_valid():
+            subject = form.cleaned_data['subject']
+            queue = form.cleaned_data['queue']
+            text = form.cleaned_data['text']
+            requestor = form.cleaned_data['requestor']
+
+
+            return HttpResponseRedirect('')
+    else:
+        form_t = TicketForm()
+        # login = 'admin'
+        # passw = 'admin'
+        # test = 1
+
+        # tracker = rt.Rt('http://rt.easter-eggs.org/demos/testing/REST/1.0/', 'admin', 'admin')
+
+        # if tracker.login() == True:
+        #     num_track = tracker.create_ticket(Queue='Customer Service', 
+        #                                       Subject = 'test', 
+        #                                       Text = 'test',
+        #                                       )
+        #     tracker.edit_ticket(num_track, 
+        #                         Requestors = 'admin@no-mail.com')
+
+        #     tracker.logout()
+
+    return render_to_response('ticket.html',
+                              {},
+                              context_instance = RequestContext(request))
 
 
 
@@ -140,12 +151,3 @@ def add(request):
                              context_instance=RequestContext(request)
                              )
         
-
-#def clean_words(self):
-#    tmp = Domain.words.count()
-   
-#    if tmp==100:
-#        raise ValidationError("Number of words limit reached")
-
-#    words = self.cleaned_data['words']
-#    return words

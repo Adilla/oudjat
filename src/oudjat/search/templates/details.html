@@ -2,10 +2,9 @@
 <ul>
   {% for page in all_pages %}
   <li>
-    <a href="{{ page.sitename }}/{{ page.path }}">{{ page.sitename }}/{{ page.path }}</a>
-    <form action="../../../" method="post">{% csrf_token %}
-       <input type="submit" value="RT" />
-   </form>
+    <a href="http://{{ page.sitename }}/{{ page.path }}">
+      {{ page.sitename }}/{{ page.path }}</a>
+    <a href="{% url ticket year=y month=m day=d pageid=page.id %}">Send RT</a>
    
   </li>
   {% endfor %}
