@@ -9,6 +9,6 @@ urlpatterns = patterns('search.views',
                        url(r'^search/add/$', 'add'),
                        url(r'^search/results/$', 'results'),
                        url(r'^search/results/(?P<year>\d{4})/(?P<month>\d{1,2})/(?P<day>\d{1,2})/$','report_details', name='report_details'),
-                       url(r'^search/results/(?P<year>\d{4})/(?P<month>\d{1,2})/(?P<day>\d{1,2})/(?P<pageid>\d{1,4})/$', 'ticket', name='ticket'),
+                       url(r'^search/results/(?P<year>\d{4})/(?P<month>\d{1,2})/(?P<day>\d{1,2})/(?P<pageid>\d{1,9})/$', 'ticket', name='ticket'),
                        url(r'^admin/', include(admin.site.urls)),
                        )

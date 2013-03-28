@@ -35,7 +35,9 @@ class Command(NoArgsCommand):
                     #   cx = dkey
                     ).execute()
             
-            
+                research.is_done = True
+                research.save()
+
                 with open('/home/adilla/Bureau/'+ w + '_1', 'w') as f:
                     json.dump(res, f, indent = 4)
                 
@@ -56,10 +58,13 @@ class Command(NoArgsCommand):
                             while (i < len(t["items"])):
                                 test = t["items"][i]["link"]
                                 test2 = t["items"][i]["displayLink"]
-                                
-                                string = re.sub('https://' + test2 + '/', '', test)
-                                
-                                string = re.sub('http://' + test2 + '/', '', test)
+                            
+                                check = test.find('https')
+                                check2 = test.find('http')
+                                if check >= 0:
+                                    string = re.sub('https://' + test2 + '/', '', test)
+                                elif check2 >= 0:
+                                    string = re.sub('http://' + test2 + '/', '', test)
                                     
                                 print string
                                     
@@ -89,8 +94,7 @@ class Command(NoArgsCommand):
                                                                  occurences = occ, 
                                                                  date = timezone.now())
                                     
-                                    research.is_done = True
-                                    research.save()
+                              
                                     
                                 except _mysql_exceptions.Warning:
                                     print 'mysql exception'
@@ -104,15 +108,16 @@ class Command(NoArgsCommand):
                                     cmpt = cmpt + 1
                                             
                         else:
-                            cmpt = cmpt + 1       
+                            cmpt = cmpt + 1   
+                        
                     else:
                         break
                                 
                 
-                                    # try:
-                                    #     os.rmdir('/home/adilla/Bureau/tmp_research_files/')
-                                    # except OSError:
-                                    #     print 'Could not delete directory'
+                    # try:
+                    #     os.rmdir('/home/adilla/Bureau/tmp_research_files/')
+                    # except OSError:
+                    #     print 'Could not delete directory'
                 
                     
         
