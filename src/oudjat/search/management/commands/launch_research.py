@@ -55,11 +55,11 @@ class Command(NoArgsCommand):
                         while (i < len(t["items"])):
                             test = t["items"][i]["link"]
                             test2 = t["items"][i]["displayLink"]
-                            check = test.find('https')
-                            if (check > 0):
-                                string = re.sub('https://' + test2 + '/', '', test)
-                            else:
-                                string = re.sub('http://' + test2 + '/', '', test)
+                          
+                            string = re.sub('https://' + test2 + '/', '', test)
+    
+                            string = re.sub('http://' + test2 + '/', '', test)
+                             
                             print string
                           
                             occ = 0

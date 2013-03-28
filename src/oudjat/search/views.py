@@ -16,11 +16,9 @@ import datetime, rt
 DOMAINS = [(d.id, d.name) for d in Domain.objects.all()]
 #OPTIONS = [(o.id, o.name) for o in Option.objects.all()]
 
-def index(request):
-    t = loader.get_template('index.html')
-    c = Context({           
-            })
-    return HttpResponse(t.render(c))
+def index(request):    
+    return render(request, 'index.html',
+              {})
 
 
 def clean(self):
@@ -31,13 +29,11 @@ def clean(self):
 
 
 def view(request):
-
     test = Research.objects.all()
-    t = loader.get_template('view.html')
-    c = Context({
-            'test' : test,
-            })
-    return HttpResponse(t.render(c))
+    
+    return render(request, 'view.html',
+              {'test' : test,
+               })
 
 
 
@@ -70,14 +66,14 @@ def report_details(request, year, month, day):
 class TicketForm(forms.Form):
     subject = forms.CharField(max_length = 255)
     queue = forms.CharField(max_length = 255)
-    text = forms.CharField(max_length = 1000)
+    text = forms.CharField(widget = forms.Textarea)
     requestor = forms.CharField(max_length = 255)
 
 
 def ticket(request, year, month, day, pageid):
-    
     page = Page.objects.get(pk = int(pageid))
 
+    page_id = int(pageid)
     if request.method == 'POST':
         form = TicketForm(request.POST)
        
@@ -86,33 +82,41 @@ def ticket(request, year, month, day, pageid):
             queue = form.cleaned_data['queue']
             text = form.cleaned_data['text']
             requestor = form.cleaned_data['requestor']
+  
+            login = 'admin'
+            passw = 'admin'
+ 
+            tracker = rt.Rt('http://rt.easter-eggs.org/demos/testing/REST/1.0/', login, passw)
+        
+            if tracker.login() == True:
+                num_track = tracker.create_ticket(Queue='Customer Service', 
+                                                  Subject = 'test', 
+                                                  Text = 'test again and again',
+                                                  )
+                tracker.edit_ticket(num_track, 
+                                    Requestors = 'test')
+                
+                tracker.logout()
 
 
+                page.ticket = True
+                page.save()
+                
             return HttpResponseRedirect('../')
     else:
+
         form = TicketForm(initial={'subject': page.sitename,
                                    'queue': settings.FILE_RT,
                                    'text': page.path,
                                    'requestor': 'admin@no-mail.com'})
-        
-        login = 'admin'
-        passw = 'admin'
- 
-
-        tracker = rt.Rt('', login, passw)
-
-        if tracker.login() == True:
-            num_track = tracker.create_ticket(Queue='Support', 
-                                              Subject = 'test', 
-                                              Text = 'test',
-                                              )
-            tracker.edit_ticket(num_track, 
-                                Requestors = 'test')
-
-            tracker.logout()
 
     return render_to_response('ticket.html',
-                              {'form' : form},
+                              {'form' : form,
+                               'page_ticket' : page.ticket,
+                               'y': year,
+                               'm': month,
+                               'd': day,
+                               'id': pageid},
                               context_instance = RequestContext(request))
 
 
@@ -133,7 +137,7 @@ def add(request):
        if form.is_valid():
            word = form.cleaned_data['word']
            domain = form.cleaned_data['domain']
- #          option = form.cleaned_data['option']
+ #         option = form.cleaned_data['option']
 
            w = Word(expression = word)
            w.save()

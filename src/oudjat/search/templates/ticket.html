@@ -1,4 +1,6 @@
-<form action="../" method="post">{% csrf_token %}
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+<form action="{% url ticket year=y month=m day=d pageid=id %}" method="post">{% csrf_token %}
 
 {{ form.as_p }}
 

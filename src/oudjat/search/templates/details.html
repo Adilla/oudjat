@@ -1,19 +1,27 @@
 {% if all_pages %}
-<ul>
+  <table border=1 bordercolor=grey width=500 align=center>
+    <tr>
+      <th>Link</th>
+      <th>Send RT</th>
+    </tr>
   {% for page in all_pages %}
-  <li>
+  <tr>
+    <td>
     <a href="http://{{ page.sitename }}/{{ page.path }}">
       {{ page.sitename }}/{{ page.path }}</a>
-    <a href="{% url ticket year=y month=m day=d pageid=page.id %}">Send RT</a>
-   
-  </li>
+   </td>
+    <td width=5>
+    {% if page.ticket == 0 %}
+      <a href="{% url ticket year=y month=m day=d pageid=page.id %}">Send</a>
+    {% else %}
+      Done
+      {% endif %}
+      </td>
   {% endfor %}
   {% else %}
   <p> No result available </p>
-</ul>
+</table>
 {% endif %}
-
-
 <br>
 <br>
 <a href="../../../">Back to previous page</a>
