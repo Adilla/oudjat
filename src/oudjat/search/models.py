@@ -44,6 +44,7 @@ class Research(models.Model):
    words = models.CharField(max_length=255)
    domains = models.ManyToManyField(Domain, 
                                     related_name = 'researches')
+   is_done = models.BooleanField(default=False)
 
 
    def __unicode__(self):
