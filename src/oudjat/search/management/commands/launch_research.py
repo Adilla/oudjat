@@ -3,12 +3,9 @@ from django.core.management.base import NoArgsCommand, CommandError
 from search.models import *
 from report.models import *
 from apiclient.discovery import build
-import report.models
-import json
-import pprint
-import re, os, shutil, urllib
+import re, os, shutil, urllib, json, pprint, _mysql_exceptions
 from django.utils import timezone
-import _mysql_exceptions
+
 
 
 class Command(NoArgsCommand):
@@ -28,11 +25,12 @@ class Command(NoArgsCommand):
             print research
             if research.is_done == False:
                 w = research.words
-            
+                dkey = Domain.objects.filter(researches__words = w)
+           
                 res = service.cse().list(
                     q = w,
-                    cx = '006966613857663466729:_k1q5ucd9eg',
-                    #   cx = dkey
+                    #cx = '006966613857663466729:_k1q5ucd9eg',
+                    cx = dkey[0].key
                     ).execute()
             
                 research.is_done = True
