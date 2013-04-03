@@ -2,7 +2,7 @@
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.template import Context, loader, RequestContext
-from search.models import Word, Domain, Research, Option
+from search.models import *
 from report.models import *
 from django import forms
 from django.conf import settings
@@ -146,8 +146,14 @@ def add(request):
            #     o = Option.objects.filter(id = opt)
            #     w.options.add(o.get(pk = opt))
 
-           r = Research(name = word, words = word)
+           c = Crontab.objects.filter(has_reached_limit = False)[0]
+           
+           r = Research(name = word, words = word, cron = c)
            r.save()
+
+           c.number_of_researches = c.number_of_researches + 1
+
+           c.save()
             
            d = Domain.objects.filter(id = domain)
            r.domains.add(d.get(pk = domain))

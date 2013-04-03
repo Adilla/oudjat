@@ -37,10 +37,17 @@ class Domain(models.Model):
       verbose_name_plural = 'domains'
  
 
+class Crontab(models.Model):
+   number_of_researches = models.IntegerField()
+   has_reached_limit = models.BooleanField(default = False)
+
+   def __unicode__(self):
+      return u'%s' % (self.number_of_researches)
+
 
 class Research(models.Model):
    name = models.CharField(max_length=255)
-   cron = models.CharField(max_length=255)
+   cron = models.ForeignKey(Crontab, related_name= 'crons')
    words = models.CharField(max_length=255)
    domains = models.ManyToManyField(Domain, 
                                     related_name = 'researches')
