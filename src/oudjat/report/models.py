@@ -2,7 +2,7 @@ from django.db import models
 
 # Create your models here.
 class Page(models.Model):
-    path = models.CharField(max_length=255)
+    path = models.TextField(max_length=10000)
     sitename = models.CharField(max_length=255)
     ticket = models.BooleanField(default=False)
 

@@ -40,6 +40,7 @@ class Domain(models.Model):
 class Crontab(models.Model):
    number_of_researches = models.IntegerField()
    has_reached_limit = models.BooleanField(default = False)
+   priority = models.IntegerField()
 
    def __unicode__(self):
       return u'%s' % (self.number_of_researches)

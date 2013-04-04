@@ -1,10 +1,10 @@
-
 from django.core.management.base import NoArgsCommand, CommandError
 from search.models import *
 from report.models import *
 from apiclient.discovery import build
 import re, os, shutil, urllib, json, pprint, _mysql_exceptions
 from django.utils import timezone
+
 
 
 
@@ -21,7 +21,12 @@ class Command(NoArgsCommand):
         service = build("customsearch", "v1",
                         developerKey="AIzaSyBGCWOxtQZomkXAVSLmyg1XI_obyTe5P4E")
 
-        for research in Research.objects.all():
+        day_cron = Crontab.objects.get(priority = 0)
+        print day_cron.pk
+
+        related_researches = Research.objects.filter(cron = day_cron)
+
+        for research in related_researches:
             print research
             if research.is_done == False:
                 w = research.words
@@ -79,23 +84,22 @@ class Command(NoArgsCommand):
                                 #         except UnicodeDecodeError:
                                 #             print 'error for ' + strpage
                                 
-                                try:
-                                    Page.objects.get_or_create(path = string, 
-                                                               sitename = test2)
+                             #   try:
+                                Page.objects.get_or_create(path = string, 
+                                                           sitename = test2)
+                                
+                                p = Page.objects.get(path = string, sitename = test2)
+                                
+                                ww = Word.objects.get(expression = w)
                                     
-                                    p = Page.objects.get(path = string, sitename = test2)
-                                    
-                                    ww = Word.objects.get(expression = w)
-                                    
-                                    Result.objects.get_or_create(word = ww, 
-                                                                 page = p, 
-                                                                 occurences = occ, 
-                                                                 date = timezone.now())
-                                    
-                              
-                                    
-                                except _mysql_exceptions.Warning:
-                                    print 'mysql exception'
+                                Result.objects.get_or_create(word = ww, 
+                                                             page = p, 
+                                                             occurences = occ, 
+                                                             date = timezone.now())
+
+                  #              except _mysql_exceptions.Warning:
+                   #                 print 'mysql exception'
+
                                     
                                     
                                 i = i + 1
@@ -110,7 +114,12 @@ class Command(NoArgsCommand):
                         
                     else:
                         break
-                                
+                    
+        for cron in Crontab.objects.all():
+            cron.priority = (cron.priority - 1) % Crontab.objects.count() 
+            print cron.pk
+            print cron.priority
+            cron.save()
                 
                     # try:
                     #     os.rmdir('/home/adilla/Bureau/tmp_research_files/')

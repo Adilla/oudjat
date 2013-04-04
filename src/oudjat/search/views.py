@@ -139,20 +139,38 @@ def add(request):
            domain = form.cleaned_data['domain']
  #         option = form.cleaned_data['option']
 
-           w = Word(expression = word)
-           w.save()
+           Word.objects.get_or_create(expression = word)
 
            # for opt in option:
            #     o = Option.objects.filter(id = opt)
            #     w.options.add(o.get(pk = opt))
 
-           c = Crontab.objects.filter(has_reached_limit = False)[0]
+
+           try :
+               c = Crontab.objects.filter(has_reached_limit = False)[0]
            
+           except IndexError:
+               n = Crontab.objects.count()
+               
+               if n == 0:
+                   c = Crontab(number_of_researches = 0, priority = 0)
+               else:
+                   c = Crontab(number_of_researches = 0, priority = 1)
+                   for cron in Crontab.objects.all():
+                       if cron.priority != 0:
+                           cron.priority = cron.priority + 1
+                           cron.save()
+               
+               c.save()
+
            r = Research(name = word, words = word, cron = c)
            r.save()
 
            c.number_of_researches = c.number_of_researches + 1
-
+          
+           if c.number_of_researches == 100:
+               c.has_reached_limit = True
+   
            c.save()
             
            d = Domain.objects.filter(id = domain)
