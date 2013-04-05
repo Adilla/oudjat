@@ -6,28 +6,24 @@ import re, os, shutil, urllib, json, pprint, _mysql_exceptions
 from django.utils import timezone
 
 
-
-
 class Command(NoArgsCommand):
     help = 'Launches all researches'
 
     def handle_noargs(self, **options):
-
-        # try:
-        #     os.mkdir('/home/adilla/Bureau/tmp_research_files/')
-        # except OSError:
-        #     print 'Could not create new directory'
             
         service = build("customsearch", "v1",
                         developerKey="AIzaSyBGCWOxtQZomkXAVSLmyg1XI_obyTe5P4E")
 
-        day_cron = Crontab.objects.get(priority = 0)
-        print day_cron.pk
 
+        # Getting the cron to be runned (with priority = 0) and the related researches
+        day_cron = Crontab.objects.get(priority = 0)
         related_researches = Research.objects.filter(cron = day_cron)
+
 
         for research in related_researches:
             print research
+
+            # launching each research not yet done
             if research.is_done == False:
                 w = research.words
                 dkey = Domain.objects.filter(researches__words = w)
@@ -41,6 +37,7 @@ class Command(NoArgsCommand):
                 research.is_done = True
                 research.save()
 
+                # putting the results in file with Json format
                 with open('/home/adilla/Bureau/'+ w + '_1', 'w') as f:
                     json.dump(res, f, indent = 4)
                 
@@ -48,6 +45,9 @@ class Command(NoArgsCommand):
                 
                 while True:
                     str_cmpt = str(cmpt)
+
+                    # for each file, loads the content and gets all url found
+                    # then adds them into the database
                     if os.path.exists('/home/adilla/Bureau/' + w +'_' + str_cmpt):
                         f = open('/home/adilla/Bureau/'+ w + '_' + str_cmpt, 'r')
                         
@@ -84,7 +84,7 @@ class Command(NoArgsCommand):
                                 #         except UnicodeDecodeError:
                                 #             print 'error for ' + strpage
                                 
-                             #   try:
+                      
                                 Page.objects.get_or_create(path = string, 
                                                            sitename = test2)
                                 
@@ -96,11 +96,7 @@ class Command(NoArgsCommand):
                                                              page = p, 
                                                              occurences = occ, 
                                                              date = timezone.now())
-
-                  #              except _mysql_exceptions.Warning:
-                   #                 print 'mysql exception'
-
-                                    
+                                   
                                     
                                 i = i + 1
                                     
@@ -114,18 +110,15 @@ class Command(NoArgsCommand):
                         
                     else:
                         break
-                    
+        
+
+        # changes to priority of each cron
         for cron in Crontab.objects.all():
             cron.priority = (cron.priority - 1) % Crontab.objects.count() 
             print cron.pk
             print cron.priority
             cron.save()
-                
-                    # try:
-                    #     os.rmdir('/home/adilla/Bureau/tmp_research_files/')
-                    # except OSError:
-                    #     print 'Could not delete directory'
-                
+                              
                     
         
                     

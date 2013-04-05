@@ -6,10 +6,13 @@ class OptionAdmin(admin.ModelAdmin):
      list_display = ('name', 'description')
 
 class CrontabAdmin(admin.ModelAdmin):
-     list_display = ('priority', 'number_of_researches', 'has_reached_limit')
+     list_display = ('id', 'priority', 'number_of_researches', 'has_reached_limit')
+
+class ResearchAdmin(admin.ModelAdmin):
+     list_display = ('words', 'cron', 'is_done')
 
 admin.site.register(Word)
 admin.site.register(Domain)
 admin.site.register(Option, OptionAdmin)
-admin.site.register(Research)
+admin.site.register(Research, ResearchAdmin)
 admin.site.register(Crontab, CrontabAdmin)

@@ -6,11 +6,7 @@ class ResultAdmin(admin.ModelAdmin):
     list_display = ('word', 'page', 'occurences', 'date')
 
 class PageAdmin(admin.ModelAdmin):
-    fieldsets = [
-        (None,   {'fields': ['sitename']}),
-        ('Path', {'fields': ['path']}),
-        ('Request Tracker sent', {'fields' : ['ticket']}),
-      ]
+    list_display = ('sitename', 'path', 'ticket')
 
 admin.site.register(Result, ResultAdmin)
 admin.site.register(Page, PageAdmin)

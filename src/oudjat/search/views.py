@@ -16,6 +16,8 @@ import datetime, rt
 DOMAINS = [(d.id, d.name) for d in Domain.objects.all()]
 #OPTIONS = [(o.id, o.name) for o in Option.objects.all()]
 
+
+
 def index(request):    
     return render(request, 'index.html',
               {})

@@ -43,7 +43,7 @@ class Crontab(models.Model):
    priority = models.IntegerField()
 
    def __unicode__(self):
-      return u'%s' % (self.number_of_researches)
+      return u'%s' % (self.id)
 
 
 class Research(models.Model):
