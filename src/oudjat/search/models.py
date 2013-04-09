@@ -43,6 +43,7 @@ class Crontab(models.Model):
    priority = models.IntegerField()
 
    def __unicode__(self):
+
       return u'%s' % (self.id)
 
 
