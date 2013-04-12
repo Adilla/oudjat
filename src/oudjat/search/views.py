@@ -13,7 +13,7 @@ from django.forms.widgets import RadioSelect, CheckboxSelectMultiple
 import datetime, rt
 
 
-DOMAINS = [(d.id, d.name) for d in Domain.objects.all()]
+#DOMAINS = [(d.id, d.name) for d in Domain.objects.all()]
 #OPTIONS = [(o.id, o.name) for o in Option.objects.all()]
 
 
@@ -126,9 +126,13 @@ def ticket(request, year, month, day, pageid):
 class AddForm(forms.Form):
     word = forms.CharField(max_length=255)
     domain = forms.ChoiceField(widget=RadioSelect(), 
-                               choices=DOMAINS)
+                               choices=[])
    # option = forms.MultipleChoiceField(widget=CheckboxSelectMultiple(), 
    #                                    choices=OPTIONS)
+
+    def __init__(self, *args, **kwargs):
+        super(AddForm, self).__init__(*args, **kwargs)
+        self.fields['domain'].choices = [(d.id, d.name) for d in Domain.objects.all()]
 
 
 def add(request):

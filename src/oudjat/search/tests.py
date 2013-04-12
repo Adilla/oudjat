@@ -6,12 +6,14 @@ Replace this with more appropriate tests for your application.
 """
 
 from django.test import TestCase
+from django.core.exceptions import ValidationError
 from search.models import *
 from report.models import *
 from search.views import *
 from django.utils import timezone
 from django.http import *
 import datetime
+import unittest
 
 
 
@@ -61,15 +63,29 @@ class LaunchResearchTest(TestCase):
 
         self.tmp_date = Result.objects.dates('date', 'day', order = 'DESC')
 
-    def test_add_cron(self):
+
+        self.total = Crontab.objects.count()
+
+    def test_add_cron_right(self):
 
         """ Testing that the added crons have the right initial priority """
         
-        self.assertEqual(0, self.cron.priority)
-        self.assertEqual(1, self.cron2.priority)
+        if self.total == 0:
+            self.assertEqual(0, self.cron.priority)
+        else:
+            self.assertEqual(1, self.cron2.priority)
 
 
-    def test_get_cron(self):
+    @unittest.expectedFailure
+    def test_add_cron_wrong(self):
+
+        """ Testing that error is raised when the wrong priority is given to added crons """
+
+
+        self.assertNotEqual(0, self.cron.priority, "Wrong priority : must be equal to 0")
+        self.assertNotEqual(1, self.cron2.priority, "Wrong priority : must be equal to 1")
+ 
+    def test_get_cron_right(self):
         
         """ Testing that the daily cron has the right priority """
 
@@ -77,9 +93,20 @@ class LaunchResearchTest(TestCase):
         self.cron2.priority = (self.cron2.priority - 1) % Crontab.objects.count()
         self.cron2.save()
         self.assertEqual(0, self.cron2.priority)
+
+
+    @unittest.expectedFailure
+    def test_get_cron_wrong(self):
+        
+        """ Testing that the daily cron with a wrong priority raises an error """
+
+        self.assertNotEqual(0, self.daily.priority)
+        self.cron2.priority = (self.cron2.priority - 1) % Crontab.objects.count()
+        self.cron2.save()
+        self.assertNotEqual(0, self.cron2.priority)       
  
 
-    def test_string(self):
+    def test_string_right(self):
      
         """ Testing returning string """
         self.assertEqual(self.word.__unicode__(), 'test')
@@ -87,7 +114,18 @@ class LaunchResearchTest(TestCase):
         self.assertEqual(self.research.__unicode__(), 'test')
         self.assertEqual(self.cron.__unicode__(), u'%s' % (self.cron.id))
         self.assertEqual(self.option.__unicode__(), 'test')
-       
+
+    @unittest.expectedFailure
+    def test_string_wrong(self):
+
+        """ Testing that error is raised when wrong string is given """
+        self.assertNotEqual(self.word.__unicode__(), 'test')
+        self.assertNotEqual(self.domain.__unicode__(), 'test')
+        self.assertNotEqual(self.research.__unicode__(), 'test')
+        self.assertNotEqual(self.cron.__unicode__(), u'%s' % (self.cron.id))
+        self.assertNotEqual(self.option.__unicode__(), 'test')
+
+
 
 
     def test_research(self): 
@@ -107,21 +145,6 @@ class LaunchResearchTest(TestCase):
             cmpt = cmpt + 1
 
 
-            
-    
-
-            
-
-
-
-
-
-
-
-
-
-
-
         
 class ViewTest(TestCase):
     
@@ -135,10 +158,10 @@ class ViewTest(TestCase):
         self.month = 2
         self.year = 2004
         self.pageid = Page.objects.create(sitename = 'test', path = 'test')
-        self.domain = Domain.objects.create(name = 'test')
+        self.domain2 = Domain.objects.create(name = 'test')
     
         self.choices = forms.ChoiceField(widget=RadioSelect(), 
-                                         choices = (self.domain.id, self.domain.name))
+                                         choices = (self.domain2.id, self.domain2.name))
 
         self.request.POST = {'subject' : 'test',
                           'queue' : 'test',
@@ -146,12 +169,12 @@ class ViewTest(TestCase):
                           'requestor' : 'test'}
 
         self.request2.POST = {'word' : 'test',
-                              'domain' : self.domain.id}
+                              'domain' : str(self.domain2.id)}
    
 
         self.form = TicketForm(self.request.POST)
-
-   
+        self.form2 = AddForm(self.request2.POST)
+        self.form2_bis = AddForm()
 
 
     def test_index(self):
@@ -171,20 +194,28 @@ class ViewTest(TestCase):
                               HttpResponse)
 
         
-    def test_ticket(self):
+    def test_ticket_right(self):
         self.assertEqual(self.request.method, 'POST')
         self.assertIsInstance(ticket(self.request, self.year,
                                      self.month, self.day, 
                                      self.pageid.id), 
                               HttpResponse)
         self.assertTrue(self.form.is_valid())
-  
-
+        self.assertEqual(self.form.clean(), self.form.cleaned_data)
+ 
+    @unittest.expectedFailure
+    def test_ticket_wrong(self):
+        self.assertNotEqual(self.request.method, 'POST')
 
     def test_add(self):
         self.assertEqual(self.request2.method, 'POST')
         self.assertIsInstance(add(self.request2), HttpResponse)
-  
-     
-        
+ 
+        self.assertTrue(self.form2.is_valid())
+        self.assertEqual(self.form2.clean(), self.form2.cleaned_data)
 
+        self.request2.method = ''
+        if self.assertEqual(self.request2.method, ''):
+            self.assertIsInstance(self.form2_bis, Form)
+
+   
