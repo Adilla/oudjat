@@ -1,0 +1,1 @@
+/home/adilla/Bureau/django_oudjat/src/oudjat/oudjat/__init__.py

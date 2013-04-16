@@ -1,0 +1,18 @@
+from __future__ import with_statement
+from fabric.api import *
+from fabric.contrib.console import confirm
+
+def create_virtualenv():
+   local('/bin/bash -l -c "source /usr/local/bin/virtualenvwrapper.sh && mktmpenv && pip install coverage"')
+  #     local('mktmpenv', capture=False)
+ 
+def deploying_test_tools():
+    with prefix(create_virtualenv()):
+        local('pip install coverage')
+ 
+def testing():
+    with settings(warn_only=True):
+        result = local('python manage.py test report search', capture=True)
+    if result.failed and not confirm("Tests failed. Continue anyway ?"):
+        abort("Aborting at user request.")
+
