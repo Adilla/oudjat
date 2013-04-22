@@ -1,0 +1,3 @@
+report/tests.py:9: [W0401] Wildcard import report.models
+report/tests.py:10: [W0401] Wildcard import search.models
+report/tests.py:13: [R0904, SimpleTest] Too many public methods (61/50)

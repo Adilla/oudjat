@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites><testsuite name="report.tests.ModelTest"><testcase classname="report.tests.ModelTest" name="test_string" time="0.011830"></testcase></testsuite><testsuite name="report.tests.SimpleTest"><testcase classname="report.tests.SimpleTest" name="test_basic_addition" time="0.000225"></testcase></testsuite><testsuite name="search.tests.LaunchResearchTest"><testcase classname="search.tests.LaunchResearchTest" name="test_add_cron_right" time="0.052457"></testcase></testsuite></testsuites>
