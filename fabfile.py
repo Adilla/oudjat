@@ -22,24 +22,27 @@ def setup():
    """
    virtualenv('mkvirtualenv --no-site-package', VENV_NAME)
 
-
 def install_requirements():
    """ 
    Installing required packages
    """
-   with prefix('cd /home/adilla/Bureau/oudjat/'):
+   with prefix('cd /home/.jenkins/jobs/Oudjat/workspace/'):
       with prefix(WORKON):
          run('pip install -r requirements.txt')
          run('python setup.py install')
+         run('pip install django-jenkins')
  
 
 def run_tests():
    """ 
    Running tests with Coverage and unittest
    """
-   with prefix('cd /home/adilla/Bureau/oudjat/src/oudjat/'):
+   with prefix('cd /home/adilla/.jenkins/jobs/Oudjat/workspace/src/oudjat/'):
       with prefix(WORKON):
-         run('coverage run --source=\'.\' --branch manage.py test report search')
+         #run('coverage run --source=\'.\' --branch manage.py test report search')
+         run('python manage.py jenkins report search')
+         run('pylint -f parseable search | tee ../../reports/pylint.report')
+         run('pylint -f parseable report | tee -a ../../reports/pylint.report')
 
 
 def clean():
