@@ -204,7 +204,7 @@ def add(request):
             _cron.save()
             
             dom = Domain.objects.filter(id = domain)
-            res.domains.add(d.get(pk = domain))
+            res.domains.add(dom.get(pk = domain))
            
             return HttpResponseRedirect('../view/')
     else:
