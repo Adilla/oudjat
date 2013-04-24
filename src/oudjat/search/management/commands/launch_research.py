@@ -35,7 +35,7 @@ class Command(NoArgsCommand):
             # launching each research not yet done
             if research.is_done == False:
                 _word = research.words
-                dkey = Domain.objects.filter(researches__words = w)
+                dkey = Domain.objects.filter(researches__words = _word)
            
                 res = service.cse().list(
                     q = _word,
@@ -47,8 +47,8 @@ class Command(NoArgsCommand):
                 research.save()
 
                 # putting the results in file with Json format
-                with open('/home/adilla/Bureau/'+ _word + '_1', 'w') as f:
-                    json.dump(res, f, indent = 4)
+                with open('/home/adilla/Bureau/'+ _word + '_1', 'w') as _file:
+                    json.dump(res, _file, indent = 4)
                 
                 cmpt = 1
                 
@@ -66,10 +66,10 @@ class Command(NoArgsCommand):
                         
                         print '/home/adilla/Bureau/'+ _word + '_' + str_cmpt
                         if 'items' in loaded_file:
-                            print len(t["items"])
-                            while (i < len(t["items"])):
-                                test = t["items"][i]["link"]
-                                test2 = t["items"][i]["displayLink"]
+                            print len(loaded_file["items"])
+                            while (i < len(loaded_file["items"])):
+                                test = loaded_file["items"][i]["link"]
+                                test2 = loaded_file["items"][i]["displayLink"]
                             
                                 check = test.find('https')
                                 check2 = test.find('http')

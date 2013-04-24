@@ -4,14 +4,13 @@ All views
 
 """
 
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.template import RequestContext
 from search.models import Word, Domain, Crontab, Research
 from report.models import *
 from django import forms
 from django.conf import settings
 from django.shortcuts import render, render_to_response
-from django.forms.fields import MultipleChoiceField
 from django.forms.widgets import RadioSelect
 import datetime, rt
 
@@ -19,7 +18,7 @@ import datetime, rt
 #DOMAINS = [(d.id, d.name) for d in Domain.objects.all()]
 #OPTIONS = [(o.id, o.name) for o in Option.objects.all()]
 
-
+g
 
 def index(request):    
 
@@ -108,7 +107,10 @@ def ticket(request, year, month, day, pageid):
             login = 'admin'
             passw = 'admin'
  
-            tracker = rt.Rt('http://rt.easter-eggs.org/demos/testing/REST/1.0/', login, passw)
+            tracker = rt.Rt(
+                'http://rt.easter-eggs.org/demos/testing/REST/1.0/', 
+                login, 
+                passw)
         
             if tracker.login() == True:
                 num_track = tracker.create_ticket(Queue = queue, 

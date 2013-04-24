@@ -7,6 +7,7 @@ from report.models import Result
 from django.contrib import admin
 
 class ResultAdmin(admin.ModelAdmin):
+    
     """ Admin interface for module Result """
 
     list_display = ('word', 'page', 'occurences', 'date')

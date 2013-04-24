@@ -5,7 +5,6 @@ Models related to search
 from django.db import models
 # Create your models here.
 
-
 class Option(models.Model):
    """ Defining an option """
 
@@ -20,6 +19,7 @@ class Option(models.Model):
 
 
 class Word(models.Model):
+   
 
    """ Defining a word """
 
