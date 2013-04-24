@@ -229,8 +229,9 @@ class ViewTest(TestCase):
         self.assertEqual(self.form.clean(), self.form.cleaned_data)
  
     @unittest.expectedFailure
-    """ Testing that the form ticket is effectively wrong when method not equal POST """
     def test_ticket_wrong(self):
+        """ Testing that the form ticket is effectively wrong when method not equal POST """
+    
         self.assertNotEqual(self.request.method, 'POST')
 
     def test_add(self):
