@@ -11,27 +11,32 @@ from search.models import *
 from report.models import *
 from search.views import *
 from django.utils import timezone
-from django.http import *
+from django.http import HttpResponse
 import datetime
 import unittest
 
 
-
-class SimpleTest(TestCase):
-    def test_basic_addition(self):
-        """
-        Tests that 1 + 1 always equals 2.
-        """
-        self.assertEqual(1 + 1, 2)
-
-
 class LaunchResearchTest(TestCase):
+
+    """ Class test for launch_research.py """
     
     def setUp(self):
 
-        self.option = Option.objects.create(name = 'test', description = 'test')
-        self.cron = Crontab.objects.create(number_of_researches = 0, priority = 0)
-        self.cron2 = Crontab.objects.create(number_of_researches = 0, priority = 1)
+        """
+        """
+
+        self.option = Option.objects.create(
+            name = 'test',
+            description = 'test')
+
+        self.cron = Crontab.objects.create(
+            number_of_researches = 0, 
+            priority = 0)
+
+        self.cron2 = Crontab.objects.create(
+            number_of_researches = 0, 
+            priority = 1)
+
         self.daily = Crontab.objects.get(priority = 0)
      
         self.word = Word.objects.create(expression = 'test')
@@ -130,6 +135,8 @@ class LaunchResearchTest(TestCase):
 
     def test_research(self): 
 
+        """ Testing that boolean value of a research is correct """
+
         cmpt = 1
         for obj in Research.objects.all():
             self.assertFalse(obj.is_done)
@@ -147,8 +154,13 @@ class LaunchResearchTest(TestCase):
 
         
 class ViewTest(TestCase):
+
+    """ Class test for views """
     
     def setUp(self):
+        """
+        """
+
         self.request = HttpRequest()
         self.request2 = HttpRequest()
         self.request.method = 'POST'
@@ -178,15 +190,23 @@ class ViewTest(TestCase):
 
 
     def test_index(self):
+
+        """ Testing that the index view gives a HttpResponse """
         self.assertIsInstance(index(self.request), HttpResponse)
 
     def test_view(self):
+
+        """ Testing that the view of searches gives a HttpResponse """
         self.assertIsInstance(view(self.request), HttpResponse)
 
     def test_results(self):
+
+        """ Testing that the view of results gives a HttpResponse """
         self.assertIsInstance(results(self.request), HttpResponse)
 
     def test_report_details(self):
+        """ Testing that the view of details gives a HttpResponse """
+
         self.assertIsInstance(report_details(self.request, 
                                              self.year, 
                                              self.month, 
@@ -195,6 +215,11 @@ class ViewTest(TestCase):
 
         
     def test_ticket_right(self):
+
+        """ Testing that a ticket form has the right method, http
+        answer, and that the form is valid
+        
+        """
         self.assertEqual(self.request.method, 'POST')
         self.assertIsInstance(ticket(self.request, self.year,
                                      self.month, self.day, 
@@ -204,10 +229,17 @@ class ViewTest(TestCase):
         self.assertEqual(self.form.clean(), self.form.cleaned_data)
  
     @unittest.expectedFailure
+    """ Testing that the form ticket is effectively wrong when method not equal POST """
     def test_ticket_wrong(self):
         self.assertNotEqual(self.request.method, 'POST')
 
     def test_add(self):
+        """
+        Testing that the add form has the right method, http answer,
+        and that the form is valid 
+        
+        """
+
         self.assertEqual(self.request2.method, 'POST')
         self.assertIsInstance(add(self.request2), HttpResponse)
  

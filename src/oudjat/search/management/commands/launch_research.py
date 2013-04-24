@@ -1,3 +1,7 @@
+""" 
+Command for job 
+"""
+
 from django.core.management.base import NoArgsCommand
 from search.models import Word, Domain, Research, Crontab 
 from apiclient.discovery import build
@@ -6,7 +10,10 @@ from django.utils import timezone
 
 
 class Command(NoArgsCommand):
-    help = 'Launches all researches'
+
+    """
+    Command launching all researches 
+    """
 
     def handle_noargs(self, **options):
             
