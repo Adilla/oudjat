@@ -1,8 +1,7 @@
-from django.core.management.base import NoArgsCommand, CommandError
-from search.models import *
-from report.models import *
+from django.core.management.base import NoArgsCommand
+from search.models import Word, Domain, Research, Crontab 
 from apiclient.discovery import build
-import re, os, shutil, urllib, json, pprint, _mysql_exceptions
+import re, os, json
 from django.utils import timezone
 
 
@@ -11,11 +10,14 @@ class Command(NoArgsCommand):
 
     def handle_noargs(self, **options):
             
+        """ Job handling all researches """
+
         service = build("customsearch", "v1",
                         developerKey="AIzaSyBGCWOxtQZomkXAVSLmyg1XI_obyTe5P4E")
 
 
-        # Getting the cron to be runned (with priority = 0) and the related researches
+        # Getting the cron to be runned (with priority = 0) 
+        # and the related researches
         day_cron = Crontab.objects.get(priority = 0)
         related_researches = Research.objects.filter(cron = day_cron)
 
@@ -48,8 +50,8 @@ class Command(NoArgsCommand):
 
                     # for each file, loads the content and gets all url found
                     # then adds them into the database
-                    if os.path.exists('/home/adilla/Bureau/' + w +'_' + str_cmpt):
-                        f = open('/home/adilla/Bureau/'+ w + '_' + str_cmpt, 'r')
+                    if os.path.exists('/home/adilla/Bureau/'+ w +'_'+ str_cmpt):
+                        f = open('/home/adilla/Bureau/'+ w +'_'+ str_cmpt,'r')
                         
                         t = json.load(f)
                         
@@ -65,7 +67,7 @@ class Command(NoArgsCommand):
                                 check = test.find('https')
                                 check2 = test.find('http')
                                 if check >= 0:
-                                    string = re.sub('https://' + test2 + '/', '', test)
+                                    string = re.sub('https://'+ test2 +'/', '', test)
                                 elif check2 >= 0:
                                     string = re.sub('http://' + test2 + '/', '', test)
                                     
@@ -101,8 +103,8 @@ class Command(NoArgsCommand):
                                 i = i + 1
                                     
                                 f.close()
-                                if os.path.exists('/home/adilla/Bureau/' + w + '_' + str_cmpt):
-                                    os.remove('/home/adilla/Bureau/' + w + '_' + str_cmpt)
+                                if os.path.exists('/home/adilla/Bureau/'+ w +'_'+ str_cmpt):
+                                    os.remove('/home/adilla/Bureau/' + w +'_'+ str_cmpt)
                                     cmpt = cmpt + 1
                                             
                         else:

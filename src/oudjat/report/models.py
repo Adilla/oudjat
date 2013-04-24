@@ -1,7 +1,12 @@
+"""
+Models
+"""
+
 from django.db import models
 
-# Create your models here.
 class Page(models.Model):
+    """ Defining a page found """
+
     path = models.CharField(max_length=767)
     sitename = models.CharField(max_length=255)
     ticket = models.BooleanField(default=False)
@@ -15,6 +20,8 @@ class Page(models.Model):
 
 
 class Result(models.Model):
+    """ Defining a result found """
+
     word = models.ForeignKey('search.Word', related_name='results')
     page = models.ForeignKey(Page, related_name='pages')
     occurences = models.IntegerField()
