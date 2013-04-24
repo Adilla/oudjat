@@ -1,15 +1,18 @@
-# Create your views here.
-from django.http import HttpResponse, Http404, HttpResponseRedirect
-from django.core.urlresolvers import reverse
-from django.template import Context, loader, RequestContext
-from search.models import *
+"""
+
+All views
+
+"""
+
+from django.http import HttpResponse, HttpResponseRedirect
+from django.template import RequestContext
+from search.models import Word, Domain, Crontab, Research
 from report.models import *
 from django import forms
 from django.conf import settings
-from django.core.validators import validate_email
 from django.shortcuts import render, render_to_response
-from django.forms.fields import ChoiceField, MultipleChoiceField
-from django.forms.widgets import RadioSelect, CheckboxSelectMultiple
+from django.forms.fields import MultipleChoiceField
+from django.forms.widgets import RadioSelect
 import datetime, rt
 
 
@@ -19,11 +22,16 @@ import datetime, rt
 
 
 def index(request):    
+
+    """ main page """
+    
     return render(request, 'index.html',
               {})
 
 
 def clean(self):
+    """ clean method """
+
     if any(self.errors):
         return
     data = self.cleaned.data
@@ -31,6 +39,9 @@ def clean(self):
 
 
 def view(request):
+
+    """ displaying all searches added """
+
     test = Research.objects.all()
     
     return render(request, 'view.html',
@@ -40,6 +51,8 @@ def view(request):
 
 
 def results(request):
+    """ displaying reports per date """
+
     dates = Result.objects.dates('date', 'day', order = 'DESC')
      
     return render(request, 'results.html', {
@@ -47,25 +60,30 @@ def results(request):
             })
 
 def report_details(request, year, month, day):
+
+    """ displaying details of report """
    
-    y = int(year)
-    m = int(month)
-    d = int(day)
+    _year = int(year)
+    _month = int(month)
+    _day = int(day)
     
     all_pages = Page.objects.filter(
-        pages__date = datetime.date(y,m,d)
+        pages__date = datetime.date(_year, _month, _day)
         ).distinct()
    
     return render_to_response('details.html', 
                              { 'all_pages' : all_pages,
-                               'y' : y,
-                               'm' : m,
-                               'd' : d,
+                               'y' : _year,
+                               'm' : _month,
+                               'd' : _day,
                               },
                              context_instance = RequestContext(request))
 
 
 class TicketForm(forms.Form):
+
+    """ Form to send a ticket """
+
     subject = forms.CharField(max_length = 255)
     queue = forms.CharField(max_length = 255)
     text = forms.CharField(widget = forms.Textarea)
@@ -73,9 +91,11 @@ class TicketForm(forms.Form):
 
 
 def ticket(request, year, month, day, pageid):
+    """ Handling RT tickets """
+
     page = Page.objects.get(pk = int(pageid))
 
-    page_id = int(pageid)
+    #page_id = int(pageid)
     if request.method == 'POST':
         form = TicketForm(request.POST)
        
@@ -91,12 +111,12 @@ def ticket(request, year, month, day, pageid):
             tracker = rt.Rt('http://rt.easter-eggs.org/demos/testing/REST/1.0/', login, passw)
         
             if tracker.login() == True:
-                num_track = tracker.create_ticket(Queue='Customer Service', 
-                                                  Subject = 'test', 
-                                                  Text = 'test again and again',
+                num_track = tracker.create_ticket(Queue = queue, 
+                                                  Subject = subject, 
+                                                  Text = text,
                                                   )
                 tracker.edit_ticket(num_track, 
-                                    Requestors = 'test')
+                                    Requestors = requestor)
                 
                 tracker.logout()
 
@@ -124,6 +144,8 @@ def ticket(request, year, month, day, pageid):
 
 
 class AddForm(forms.Form):
+    """ Form to add a new search """
+
     word = forms.CharField(max_length=255)
     domain = forms.ChoiceField(widget=RadioSelect(), 
                                choices=[])
@@ -137,57 +159,59 @@ class AddForm(forms.Form):
 
 def add(request):
 
-   if request.method == 'POST':
-       form = AddForm(request.POST)
+    """ Handling the add of a new search """
 
-       if form.is_valid():
-           word = form.cleaned_data['word']
-           domain = form.cleaned_data['domain']
- #         option = form.cleaned_data['option']
+    if request.method == 'POST':
+        form = AddForm(request.POST)
 
-           Word.objects.get_or_create(expression = word)
+        if form.is_valid():
+            word = form.cleaned_data['word']
+            domain = form.cleaned_data['domain']
+#         option = form.cleaned_data['option']
+
+            Word.objects.get_or_create(expression = word)
 
            # for opt in option:
            #     o = Option.objects.filter(id = opt)
            #     w.options.add(o.get(pk = opt))
 
 
-           try :
-               c = Crontab.objects.filter(has_reached_limit = False)[0]
+            try :
+                _cron = Crontab.objects.filter(has_reached_limit = False)[0]
            
-           except IndexError:
-               n = Crontab.objects.count()
+            except IndexError:
+                num = Crontab.objects.count()
                
-               if n == 0:
-                   c = Crontab(number_of_researches = 0, priority = 0)
-               else:
-                   c = Crontab(number_of_researches = 0, priority = 1)
-                   for cron in Crontab.objects.all():
-                       if cron.priority != 0:
-                           cron.priority = cron.priority + 1
-                           cron.save()
+                if num == 0:
+                    _cron = Crontab(number_of_researches = 0, priority = 0)
+                else:
+                    _cron = Crontab(number_of_researches = 0, priority = 1)
+                    for cron in Crontab.objects.all():
+                        if cron.priority != 0:
+                            cron.priority = cron.priority + 1
+                            cron.save()
                
-               c.save()
+                _cron.save()
 
-           r = Research(name = word, words = word, cron = c)
-           r.save()
+            res = Research(name = word, words = word, cron = _cron)
+            res.save()
 
-           c.number_of_researches = c.number_of_researches + 1
+            _cron.number_of_researches = _cron.number_of_researches + 1
           
-           if c.number_of_researches == 100:
-               c.has_reached_limit = True
+            if _cron.number_of_researches == 100:
+                _cron.has_reached_limit = True
    
-           c.save()
+            _cron.save()
             
-           d = Domain.objects.filter(id = domain)
-           r.domains.add(d.get(pk = domain))
+            dom = Domain.objects.filter(id = domain)
+            res.domains.add(d.get(pk = domain))
            
-           return HttpResponseRedirect('../view/')
-   else:
-       form = AddForm()
+            return HttpResponseRedirect('../view/')
+    else:
+        form = AddForm()
 
-   return render_to_response('add.html',
-                             {'form' : form,}, 
-                             context_instance=RequestContext(request)
-                             )
+    return render_to_response('add.html',
+                              {'form' : form,}, 
+                              context_instance=RequestContext(request)
+                              )
         

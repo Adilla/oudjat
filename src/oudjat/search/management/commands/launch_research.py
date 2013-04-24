@@ -34,11 +34,11 @@ class Command(NoArgsCommand):
 
             # launching each research not yet done
             if research.is_done == False:
-                w = research.words
+                _word = research.words
                 dkey = Domain.objects.filter(researches__words = w)
            
                 res = service.cse().list(
-                    q = w,
+                    q = _word,
                     #cx = '006966613857663466729:_k1q5ucd9eg',
                     cx = dkey[0].key
                     ).execute()
@@ -47,7 +47,7 @@ class Command(NoArgsCommand):
                 research.save()
 
                 # putting the results in file with Json format
-                with open('/home/adilla/Bureau/'+ w + '_1', 'w') as f:
+                with open('/home/adilla/Bureau/'+ _word + '_1', 'w') as f:
                     json.dump(res, f, indent = 4)
                 
                 cmpt = 1
@@ -57,15 +57,15 @@ class Command(NoArgsCommand):
 
                     # for each file, loads the content and gets all url found
                     # then adds them into the database
-                    if os.path.exists('/home/adilla/Bureau/'+ w +'_'+ str_cmpt):
-                        f = open('/home/adilla/Bureau/'+ w +'_'+ str_cmpt,'r')
+                    if os.path.exists('/home/adilla/Bureau/'+ _word +'_'+ str_cmpt):
+                        _file = open('/home/adilla/Bureau/'+ _word +'_'+ str_cmpt,'r')
                         
-                        t = json.load(f)
+                        loaded_file = json.load(_file)
                         
                         i = 0
                         
-                        print '/home/adilla/Bureau/'+ w + '_' + str_cmpt
-                        if 'items' in t:
+                        print '/home/adilla/Bureau/'+ _word + '_' + str_cmpt
+                        if 'items' in loaded_file:
                             print len(t["items"])
                             while (i < len(t["items"])):
                                 test = t["items"][i]["link"]
@@ -97,12 +97,12 @@ class Command(NoArgsCommand):
                                 Page.objects.get_or_create(path = string, 
                                                            sitename = test2)
                                 
-                                p = Page.objects.get(path = string, sitename = test2)
+                                _page = Page.objects.get(path = string, sitename = test2)
                                 
-                                ww = Word.objects.get(expression = w)
+                                _word2 = Word.objects.get(expression = _word)
                                     
-                                Result.objects.get_or_create(word = ww, 
-                                                             page = p, 
+                                Result.objects.get_or_create(word = _word2, 
+                                                             page = _page, 
                                                              occurences = occ, 
                                                              date = timezone.now())
                                    
@@ -110,8 +110,8 @@ class Command(NoArgsCommand):
                                 i = i + 1
                                     
                                 f.close()
-                                if os.path.exists('/home/adilla/Bureau/'+ w +'_'+ str_cmpt):
-                                    os.remove('/home/adilla/Bureau/' + w +'_'+ str_cmpt)
+                                if os.path.exists('/home/adilla/Bureau/'+ _word +'_'+ str_cmpt):
+                                    os.remove('/home/adilla/Bureau/' + _word +'_'+ str_cmpt)
                                     cmpt = cmpt + 1
                                             
                         else:
