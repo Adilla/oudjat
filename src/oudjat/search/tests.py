@@ -9,7 +9,7 @@ from django.test import TestCase
 from django.core.exceptions import ValidationError
 from search.models import *
 from report.models import *
-from search.views import AddForm, TicketForm
+from search.views import AddForm, TicketForm, forms
 from django.utils import timezone
 from django.http import HttpResponse, HttpRequest
 import datetime
