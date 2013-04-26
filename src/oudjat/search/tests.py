@@ -6,10 +6,11 @@ Replace this with more appropriate tests for your application.
 """
 
 from django.test import TestCase
-from search.models import *
-from report.models import *
+from search.models import Crontab, Word, Research, Option, Domain
+from report.models import Page, Result
 from search.views import *
 from django.utils import timezone
+from django import forms
 from django.http import HttpResponse, HttpRequest
 import datetime
 import unittest
@@ -83,11 +84,17 @@ class LaunchResearchTest(TestCase):
     @unittest.expectedFailure
     def test_add_cron_wrong(self):
 
-        """ Testing that error is raised when the wrong priority is given to added crons """
+        """ 
+        Testing that error is raised 
+        when the wrong priority is given to added crons 
+        """
 
 
-        self.assertNotEqual(0, self.cron.priority, "Wrong priority : must be equal to 0")
-        self.assertNotEqual(1, self.cron2.priority, "Wrong priority : must be equal to 1")
+        self.assertNotEqual(0, self.cron.priority, 
+                            "Wrong priority : must be equal to 0")
+        
+        self.assertNotEqual(1, self.cron2.priority, 
+                            "Wrong priority : must be equal to 1")
  
     def test_get_cron_right(self):
         
@@ -102,7 +109,9 @@ class LaunchResearchTest(TestCase):
     @unittest.expectedFailure
     def test_get_cron_wrong(self):
         
-        """ Testing that the daily cron with a wrong priority raises an error """
+        """ 
+        Testing that the daily cron with a wrong priority raises an error 
+        """
 
         self.assertNotEqual(0, self.daily.priority)
         self.cron2.priority = (self.cron2.priority - 1) % Crontab.objects.count()
@@ -171,8 +180,11 @@ class ViewTest(TestCase):
         self.pageid = Page.objects.create(sitename = 'test', path = 'test')
         self.domain2 = Domain.objects.create(name = 'test')
     
-        self.choices = forms.ChoiceField(widget=RadioSelect(), 
-                                         choices = (self.domain2.id, self.domain2.name))
+        self.choices = forms.ChoiceField(
+            widget=RadioSelect(), 
+            choices = (self.domain2.id, 
+                       self.domain2.name)
+            )
 
         self.request.POST = {'subject' : 'test',
                           'queue' : 'test',
@@ -215,10 +227,10 @@ class ViewTest(TestCase):
         
     def test_ticket_right(self):
 
-        """ Testing that a ticket form has the right method, http
-        answer, and that the form is valid
-        
+        """ Testing that a ticket form has the right method, 
+        http answer, and that the form is valid
         """
+       
         self.assertEqual(self.request.method, 'POST')
         self.assertIsInstance(ticket(self.request, self.year,
                                      self.month, self.day, 
@@ -229,7 +241,10 @@ class ViewTest(TestCase):
  
     @unittest.expectedFailure
     def test_ticket_wrong(self):
-        """ Testing that the form ticket is effectively wrong when method not equal POST """
+        """ 
+        Testing that the form ticket is 
+        effectively wrong when method not equal POST 
+        """
     
         self.assertNotEqual(self.request.method, 'POST')
 

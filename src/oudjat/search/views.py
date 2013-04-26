@@ -88,60 +88,60 @@ class TicketForm(forms.Form):
     requestor = forms.CharField(max_length = 255)
 
 
-def ticket(request, year, month, day, pageid):
-    """ Handling RT tickets """
+    def ticket(request, year, month, day, pageid):
+        """ Handling RT tickets """
 
-    page = Page.objects.get(pk = int(pageid))
+        page = Page.objects.get(pk = int(pageid))
 
     #page_id = int(pageid)
-    if request.method == 'POST':
-        form = TicketForm(request.POST)
+        if request.method == 'POST':
+            form = TicketForm(request.POST)
        
-        if form.is_valid():
-            subject = form.cleaned_data['subject']
-            queue = form.cleaned_data['queue']
-            text = form.cleaned_data['text']
-            requestor = form.cleaned_data['requestor']
+            if form.is_valid():
+                subject = form.cleaned_data['subject']
+                queue = form.cleaned_data['queue']
+                text = form.cleaned_data['text']
+                requestor = form.cleaned_data['requestor']
   
-            login = 'admin'
-            passw = 'admin'
+                login = 'admin'
+                passw = 'admin'
  
-            tracker = rt.Rt(
-                'http://rt.easter-eggs.org/demos/testing/REST/1.0/', 
-                login, 
-                passw)
-        
-            if tracker.login() == True:
-                num_track = tracker.create_ticket(Queue = queue, 
-                                                  Subject = subject, 
-                                                  Text = text,
-                                                  )
-                tracker.edit_ticket(num_track, 
-                                    Requestors = requestor)
+                tracker = rt.Rt(
+                    'http://rt.easter-eggs.org/demos/testing/REST/1.0/', 
+                    login, 
+                    passw)
                 
-                tracker.logout()
+                if tracker.login() == True:
+                    num_track = tracker.create_ticket(Queue = queue, 
+                                                      Subject = subject, 
+                                                      Text = text,
+                                                      )
+                    tracker.edit_ticket(num_track, 
+                                        Requestors = requestor)
+                    
+                    tracker.logout()
+                    
+                    
+                    page.ticket = True
+                    page.save()
+                    
+                    return HttpResponseRedirect('../')
+        else:
 
+            form = TicketForm(initial={'subject': page.sitename,
+                                       'queue': settings.FILE_RT,
+                                       'text': page.path,
+                                       'requestor': 'admin@no-mail.com'})
 
-                page.ticket = True
-                page.save()
-                
-            return HttpResponseRedirect('../')
-    else:
-
-        form = TicketForm(initial={'subject': page.sitename,
-                                   'queue': settings.FILE_RT,
-                                   'text': page.path,
-                                   'requestor': 'admin@no-mail.com'})
-
-    return render_to_response('ticket.html',
-                              {'form' : form,
-                               'page_ticket' : page.ticket,
-                               'y': year,
-                               'm': month,
-                               'd': day,
-                               'id': pageid},
-                              context_instance = RequestContext(request))
-
+        return render_to_response('ticket.html',
+                                  {'form' : form,
+                                   'page_ticket' : page.ticket,
+                                   'y': year,
+                                   'm': month,
+                                   'd': day,
+                                   'id': pageid},
+                                  context_instance = RequestContext(request))
+    
 
 
 class AddForm(forms.Form):
@@ -155,21 +155,23 @@ class AddForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         super(AddForm, self).__init__(*args, **kwargs)
-        self.fields['domain'].choices = [(d.id, d.name) for d in Domain.objects.all()]
+        self.fields['domain'].choices = [
+            (d.id, d.name) for d in Domain.objects.all()
+            ]
 
 
-def add(request):
+    def add(request):
 
     """ Handling the add of a new search """
 
     if request.method == 'POST':
         form = AddForm(request.POST)
-
+        
         if form.is_valid():
             word = form.cleaned_data['word']
             domain = form.cleaned_data['domain']
 #         option = form.cleaned_data['option']
-
+            
             Word.objects.get_or_create(expression = word)
 
            # for opt in option:

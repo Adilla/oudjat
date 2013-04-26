@@ -57,8 +57,11 @@ class Command(NoArgsCommand):
 
                     # for each file, loads the content and gets all url found
                     # then adds them into the database
-                    if os.path.exists('/home/adilla/Bureau/'+ _word +'_'+ str_cmpt):
-                        _file = open('/home/adilla/Bureau/'+ _word +'_'+ str_cmpt,'r')
+                    if os.path.exists(
+                        '/home/adilla/Bureau/'+ _word +'_'+ str_cmpt):
+                        
+                        _file = open(
+                            '/home/adilla/Bureau/'+ _word +'_'+ str_cmpt,'r')
                         
                         loaded_file = json.load(_file)
                         
@@ -74,20 +77,25 @@ class Command(NoArgsCommand):
                                 check = test.find('https')
                                 check2 = test.find('http')
                                 if check >= 0:
-                                    string = re.sub('https://'+ test2 +'/', '', test)
+                                    string = re.sub(
+                                        'https://'+ test2 +'/', '', test)
+
                                 elif check2 >= 0:
-                                    string = re.sub('http://' + test2 + '/', '', test)
+                                    string = re.sub(
+                                        'http://' + test2 + '/', '', test)
                                     
                                 print string
                                     
                                 occ = 0
-                                # ppage = urllib.urlopen('http://' + test2 + '/' + test)
+                                # ppage = urllib.urlopen(
+                                # 'http://' + test2 + '/' + test)
                                 
                                 # for strpage in ppage.readlines():
                                 #     if strpage is not None: 
                                 #       #  print strpage
                                 #         try:
-                                #             num = (strpage.decode('utf-8')).find(w)
+                                #             num = (
+                                #strpage.decode('utf-8')).find(w)
                                 #             if num > 0:
                                 #                 occ = occ + 1
                                 #         except UnicodeDecodeError:
@@ -110,8 +118,10 @@ class Command(NoArgsCommand):
                                 i = i + 1
                                     
                                 f.close()
-                                if os.path.exists('/home/adilla/Bureau/'+ _word +'_'+ str_cmpt):
-                                    os.remove('/home/adilla/Bureau/' + _word +'_'+ str_cmpt)
+                                if os.path.exists(
+                                    '/home/adilla/Bureau/'+ _word +'_'+ str_cmpt):
+                                    os.remove(
+                                        '/home/adilla/Bureau/' + _word +'_'+ str_cmpt)
                                     cmpt = cmpt + 1
                                             
                         else:
