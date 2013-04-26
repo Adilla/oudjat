@@ -162,59 +162,59 @@ class AddForm(forms.Form):
 
     def add(request):
 
-    """ Handling the add of a new search """
+        """ Handling the add of a new search """
 
-    if request.method == 'POST':
-        form = AddForm(request.POST)
+        if request.method == 'POST':
+            form = AddForm(request.POST)
         
-        if form.is_valid():
-            word = form.cleaned_data['word']
-            domain = form.cleaned_data['domain']
-#         option = form.cleaned_data['option']
+            if form.is_valid():
+                word = form.cleaned_data['word']
+                domain = form.cleaned_data['domain']
+            #         option = form.cleaned_data['option']
             
-            Word.objects.get_or_create(expression = word)
+                Word.objects.get_or_create(expression = word)
 
            # for opt in option:
            #     o = Option.objects.filter(id = opt)
            #     w.options.add(o.get(pk = opt))
 
 
-            try :
-                _cron = Crontab.objects.filter(has_reached_limit = False)[0]
+                try :
+                    _cron = Crontab.objects.filter(has_reached_limit = False)[0]
            
-            except IndexError:
-                num = Crontab.objects.count()
+                except IndexError:
+                    num = Crontab.objects.count()
                
-                if num == 0:
-                    _cron = Crontab(number_of_researches = 0, priority = 0)
-                else:
-                    _cron = Crontab(number_of_researches = 0, priority = 1)
-                    for cron in Crontab.objects.all():
-                        if cron.priority != 0:
-                            cron.priority = cron.priority + 1
-                            cron.save()
+                    if num == 0:
+                        _cron = Crontab(number_of_researches = 0, priority = 0)
+                    else:
+                        _cron = Crontab(number_of_researches = 0, priority = 1)
+                        for cron in Crontab.objects.all():
+                            if cron.priority != 0:
+                                cron.priority = cron.priority + 1
+                                cron.save()
                
-                _cron.save()
+                    _cron.save()
 
-            res = Research(name = word, words = word, cron = _cron)
-            res.save()
+                res = Research(name = word, words = word, cron = _cron)
+                res.save()
 
-            _cron.number_of_researches = _cron.number_of_researches + 1
+                _cron.number_of_researches = _cron.number_of_researches + 1
           
-            if _cron.number_of_researches == 100:
-                _cron.has_reached_limit = True
+                if _cron.number_of_researches == 100:
+                    _cron.has_reached_limit = True
    
-            _cron.save()
+                _cron.save()
             
-            dom = Domain.objects.filter(id = domain)
-            res.domains.add(dom.get(pk = domain))
+                dom = Domain.objects.filter(id = domain)
+                res.domains.add(dom.get(pk = domain))
            
-            return HttpResponseRedirect('../view/')
-    else:
-        form = AddForm()
+                return HttpResponseRedirect('../view/')
+        else:
+            form = AddForm()
 
-    return render_to_response('add.html',
-                              {'form' : form,}, 
-                              context_instance=RequestContext(request)
-                              )
+        return render_to_response('add.html',
+                                  {'form' : form,}, 
+                                  context_instance=RequestContext(request)
+                                  )
         
