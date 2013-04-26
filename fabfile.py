@@ -4,15 +4,15 @@ from fabric.contrib.console import confirm
 from fabtools import require
 import fabtools
 
-env.hosts = ['localhost']
+#env.hosts = ['localhost']
 
 def install_requirements():
    """ 
    Installing required packages
    """
-   run('pip install -r requirements.txt')
-   run('python setup.py install')
-   run('pip install django-jenkins coverage MySQL-python')
+   local('pip install -r requirements.txt')
+   local('python setup.py install')
+   local('pip install django-jenkins coverage MySQL-python')
  
 
 def run_tests():
@@ -20,9 +20,9 @@ def run_tests():
    Running tests with Coverage and unittest
    """
 
-   run('python src/oudjat/manage.py jenkins report search')
-   run('pylint -f parseable src/oudjat/search | tee reports/pylint.report')
-   run('pylint -f parseable src/oudjat/report | tee -a reports/pylint.report')
+   local('python src/oudjat/manage.py jenkins report search')
+   local('pylint -f parseable src/oudjat/search | tee reports/pylint.report')
+   local('pylint -f parseable src/oudjat/report | tee -a reports/pylint.report')
 
 
 
