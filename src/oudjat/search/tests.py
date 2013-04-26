@@ -10,7 +10,6 @@ from search.models import Crontab, Word, Research, Option, Domain
 from report.models import Page, Result
 from search.views import *
 from django.utils import timezone
-from django import forms
 from django.http import HttpResponse, HttpRequest
 import datetime
 import unittest
