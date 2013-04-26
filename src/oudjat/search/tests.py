@@ -6,7 +6,6 @@ Replace this with more appropriate tests for your application.
 """
 
 from django.test import TestCase
-from django.core.exceptions import ValidationError
 from search.models import *
 from report.models import *
 from search.views import *
