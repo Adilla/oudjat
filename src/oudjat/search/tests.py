@@ -11,7 +11,6 @@ from report.models import Page, Result
 from search.views import *
 from django.utils import timezone
 from django.http import HttpResponse, HttpRequest
-from django import Form
 import datetime
 import unittest
 
