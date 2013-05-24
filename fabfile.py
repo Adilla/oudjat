@@ -21,7 +21,7 @@ def run_tests():
    """
 
   # local('python src/oudjat/manage.py jenkins report search')
-   local("coverage run --branch --source='.' manage.py test report search")
+   local("coverage run --branch --source='.' src/oudjat/manage.py test report search")
    local('pylint -f parseable src/oudjat/search | tee reports/pylint.report')
    local('pylint -f parseable src/oudjat/report | tee -a reports/pylint.report')
 
