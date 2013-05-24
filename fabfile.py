@@ -20,8 +20,7 @@ def run_tests():
    Running tests with Coverage and unittest
    """
 
-  # local('python src/oudjat/manage.py jenkins report search')
-   local("coverage run --branch --source='.' src/oudjat/manage.py test report search")
+   local('python src/oudjat/manage.py jenkins report search')
    local('pylint -f parseable src/oudjat/search | tee reports/pylint.report')
    local('pylint -f parseable src/oudjat/report | tee -a reports/pylint.report')
 
