@@ -10,19 +10,19 @@ def install_requirements():
    """ 
    Installing required packages
    """
-   if not fabtools.python.is_pip_installed():
-      fabtools.python.install_pip()
+ #  if not fabtools.python.is_pip_installed():
+  #    fabtools.python.install_pip()
 
-   fabtools.python.install_requirements('requirements.txt')
+ #  fabtools.python.install_requirements('requirements.txt')
+ #  local('python setup.py install')
+ #  fabtools.python.install(['django-jenkins', 
+  #                          'coverage', 
+  #                          'MySQL-python'], 
+  #                         use_sudo=False)
+
+   local('pip install -r requirements.txt')
    local('python setup.py install')
-   fabtools.python.install(['django-jenkins', 
-                            'coverage', 
-                            'MySQL-python'], 
-                           use_sudo=False)
-
-  # local('pip install -r requirements.txt')
-  # local('python setup.py install')
-  # local('pip install django-jenkins coverage MySQL-python')
+   local('pip install django-jenkins coverage MySQL-python')
  
 
 def run_tests():
