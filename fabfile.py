@@ -4,7 +4,7 @@ from fabric.contrib.console import confirm
 from fabtools import require
 import fabtools
 
-#env.hosts = ['localhost']
+env.hosts = ['localhost']
 
 def install_requirements():
    """ 
