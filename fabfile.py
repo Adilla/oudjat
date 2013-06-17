@@ -10,19 +10,26 @@ def install_requirements():
    """ 
    Installing required packages
    """
- #  if not fabtools.python.is_pip_installed():
-  #    fabtools.python.install_pip()
+   if not fabtools.python.is_pip_installed():
+      fabtools.python.install_pip()
 
- #  fabtools.python.install_requirements('requirements.txt')
- #  local('python setup.py install')
- #  fabtools.python.install(['django-jenkins', 
-  #                          'coverage', 
-  #                          'MySQL-python'], 
-  #                         use_sudo=False)
-
-   local('pip install -r requirements.txt')
+   fabtools.python.install_requirements('/home/adilla/Bureau/oudjat/requirements.txt', use_sudo=True)
+   
    local('python setup.py install')
-   local('pip install django-jenkins coverage MySQL-python')
+
+   if not fabtools.python.is_installed('django-jenkins'):
+      fabtools.python.install('django-jenkins', use_sudo=True)
+   
+   if not fabtools.python.is_installed('coverage'):
+      fabtools.python.install('coverage', use_sudo=True)
+
+   if not fabtools.python.is_installed('MySQL-python'):
+      fabtools.python.install('MySQL-python', use_sudo=True)
+ 
+
+   # run('pip install --use-mirrors -r /home/adilla/Bureau/oudjat/requirements.txt')
+   # local('python setup.py install')
+   # local('pip install django-jenkins coverage MySQL-python')
  
 
 def run_tests():
