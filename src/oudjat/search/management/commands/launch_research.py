@@ -4,6 +4,7 @@ Command for job
 
 from django.core.management.base import NoArgsCommand
 from search.models import Word, Domain, Research, Crontab 
+from report.models import Page, Result
 from apiclient.discovery import build
 import re, os, json
 from django.utils import timezone
@@ -117,7 +118,7 @@ class Command(NoArgsCommand):
                                     
                                 i = i + 1
                                     
-                                f.close()
+                                _file.close()
                                 if os.path.exists(
                                     '/home/adilla/Bureau/'+ _word +'_'+ str_cmpt):
                                     os.remove(
