@@ -169,6 +169,10 @@ class ViewTest(TestCase):
         """
 
         self.request = HttpRequest()
+#        self.request = 'fake request'
+
+        self.response = results(self.request)
+
         self.request2 = HttpRequest()
         self.request.method = 'POST'
         self.request2.method = 'POST'
@@ -178,6 +182,18 @@ class ViewTest(TestCase):
         self.year = 2004
         self.pageid = Page.objects.create(sitename = 'test', path = 'test')
         self.domain2 = Domain.objects.create(name = 'test')
+        self.word = Word.objects.create(expression = 'test')
+        self.word2 = Word.objects.create(expression = 'test2')
+
+        self.domain = Domain.objects.create(name = 'test', key = 'test')
+
+
+        self.result = Result.objects.create(page = self.pageid, 
+                                            word = self.word, 
+                                            date = timezone.now(),
+                                            occurences = 0)
+
+        self.dates = Result.objects.dates('date', 'day', order='DESC')
     
         self.choices = forms.ChoiceField(
             widget=RadioSelect(), 
@@ -212,6 +228,11 @@ class ViewTest(TestCase):
     def test_results(self):
 
         """ Testing that the view of results gives a HttpResponse """
+
+        self.assertEqual(self.response.status_code, 200)
+     
+
+
         self.assertIsInstance(results(self.request), HttpResponse)
 
     def test_report_details(self):
