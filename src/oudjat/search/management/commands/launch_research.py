@@ -12,17 +12,20 @@ from django.utils import timezone
 
 class Command(NoArgsCommand):
 
+    args = '<key>'
+
     """
     Command launching all researches 
     """
 
-    def handle_noargs(self, **options):
+    def handle(self, *args, **options):
             
         """ Job handling all researches """
 
+     #   service = build("customsearch", "v1",
+     #                   developerKey="AIzaSyBGCWOxtQZomkXAVSLmyg1XI_obyTe5P4E")
         service = build("customsearch", "v1",
-                        developerKey="AIzaSyBGCWOxtQZomkXAVSLmyg1XI_obyTe5P4E")
-
+                        developerKey=args)
 
         # Getting the cron to be runned (with priority = 0) 
         # and the related researches
@@ -130,17 +133,23 @@ class Command(NoArgsCommand):
                         
                     else:
                         break
+
+ 
+
+            
         
 
-        # changes to priority of each cron
+        # changes the priority of each cron
         for cron in Crontab.objects.all():
             cron.priority = (cron.priority - 1) % Crontab.objects.count() 
             print cron.pk
             print cron.priority
             cron.save()
                               
+        
                     
         
                     
+        
 
  
