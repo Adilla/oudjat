@@ -11,12 +11,11 @@ from django.utils import timezone
 
 
 class Command(NoArgsCommand):
-
-    args = '<key>'
-
     """
     Command launching all researches 
     """
+
+    args = '<key>'
 
     def handle(self, *args, **options):
             
@@ -25,7 +24,7 @@ class Command(NoArgsCommand):
      #   service = build("customsearch", "v1",
      #                   developerKey="AIzaSyBGCWOxtQZomkXAVSLmyg1XI_obyTe5P4E")
         service = build("customsearch", "v1",
-                        developerKey=args)
+                        developerKey=args[0])
 
         # Getting the cron to be runned (with priority = 0) 
         # and the related researches
@@ -47,11 +46,11 @@ class Command(NoArgsCommand):
                     cx = dkey[0].key
                     ).execute()
             
-                research.is_done = True
-                research.save()
+             #   research.is_done = True
+             #   research.save()
 
                 # putting the results in file with Json format
-                with open('/home/adilla/Bureau/'+ _word + '_1', 'w') as _file:
+                with open('/tmp/'+ _word + '_1', 'w') as _file:
                     json.dump(res, _file, indent = 4)
                 
                 cmpt = 1
@@ -62,16 +61,16 @@ class Command(NoArgsCommand):
                     # for each file, loads the content and gets all url found
                     # then adds them into the database
                     if os.path.exists(
-                        '/home/adilla/Bureau/'+ _word +'_'+ str_cmpt):
+                        '/tmp/'+ _word +'_'+ str_cmpt):
                         
                         _file = open(
-                            '/home/adilla/Bureau/'+ _word +'_'+ str_cmpt,'r')
+                            '/tmp/'+ _word +'_'+ str_cmpt,'r')
                         
                         loaded_file = json.load(_file)
                         
                         i = 0
                         
-                        print '/home/adilla/Bureau/'+ _word + '_' + str_cmpt
+                        print '/tmp/'+ _word + '_' + str_cmpt
                         if 'items' in loaded_file:
                             print len(loaded_file["items"])
                             while (i < len(loaded_file["items"])):
@@ -123,9 +122,9 @@ class Command(NoArgsCommand):
                                     
                                 _file.close()
                                 if os.path.exists(
-                                    '/home/adilla/Bureau/'+ _word +'_'+ str_cmpt):
+                                    '/tmp/'+ _word +'_'+ str_cmpt):
                                     os.remove(
-                                        '/home/adilla/Bureau/' + _word +'_'+ str_cmpt)
+                                        '/tmp/' + _word +'_'+ str_cmpt)
                                     cmpt = cmpt + 1
                                             
                         else:
