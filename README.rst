@@ -34,9 +34,22 @@ Add the following cron:
 Manage through your Django interface
 ------------------------------------
 
-See web interface at http://localhost:8000/search
 
-See admin interface at http://localhost:8000/admin
+* Admin interface 
+
+You can add a new domain with the matching search engine ID, activate/deactivate a research...
+
+See at http://localhost:8000/admin
+
+
+* Web interface 
+
+You can add new researches with the matching word and domain, view activated researches or results...
+
+See at http://localhost:8000/search
+
+
+
 
 
 
