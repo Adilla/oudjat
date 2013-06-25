@@ -5,6 +5,10 @@ Oudjat
 A search application based on Google's API Custom Search and Django. You can create your personal search engine, schedule jobs and manage your researches through a Django interface.
 
 
+Install
+-------
+
+
 Setting up the Google API
 -------------------------
 
