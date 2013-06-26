@@ -2,7 +2,8 @@
 Oudjat
 ======
 
-A search application based on Google's API Custom Search and Django. You can create your personal search engine, schedule jobs and manage your researches through a Django interface.
+
+A search application based on Google's API Custom Search and Django. You can create your personal search engine, schedule jobs and manage your searches through a Django interface.
 
 
 Install
@@ -24,7 +25,7 @@ For more informations, check the Google Custom Search documentation : https://de
 Schedule research jobs
 ----------------------
 
-Create cron which executes the file launch_research.py everyday, with the API key created.
+Create cron which executes the file launch_search.py everyday, with the API key created.
 
 Open crontab to edit: 
 
@@ -32,7 +33,7 @@ Open crontab to edit:
 
 Add the following cron: 
 
-	0 0 * * * /usr/bin/python projectpath/src/oudjat/manage.py projectpath/src/oudjat/search/management/commands/launch_research.py your_developer_key
+	0 0 * * * /usr/bin/python projectpath/src/oudjat/manage.py projectpath/src/oudjat/search/management/commands/launch_search.py your_developer_key
 
 
 Manage through your Django interface
@@ -41,14 +42,14 @@ Manage through your Django interface
 
 * Admin interface 
 
-You can add a new domain with the matching search engine ID, activate/deactivate a research...
+You can add a new domain with the matching search engine ID, activate/deactivate a search...
 
 See at http://localhost:8000/admin
 
 
 * Web interface 
 
-You can add new researches with the matching word and domain, view activated researches or results...
+You can add new searches with the matching word and domain, view activated searches or results...
 
 See at http://localhost:8000/search
 
