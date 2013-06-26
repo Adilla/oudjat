@@ -22,7 +22,7 @@ Setting up the Google API
 For more informations, check the Google Custom Search documentation : https://developers.google.com/custom-search/v1/getting_started?hl=en
 
 
-Schedule research jobs
+Schedule search jobs
 ----------------------
 
 Create cron which executes the file launch_search.py everyday, with the API key created.
