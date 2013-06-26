@@ -105,7 +105,7 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    "/home/adilla/Bureau/django_oudjat/src/oudjat/search/templates",
+    "/home/adilla/Bureau/oudjat/src/oudjat/search/templates",
 )
 
 INSTALLED_APPS = (
@@ -168,3 +168,4 @@ EMAIL_PORT = 1025
 
 FILE_RT = 'Services_Metiers'
 
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'

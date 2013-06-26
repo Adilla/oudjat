@@ -1,7 +1,5 @@
 """
-
 All views
-
 """
 
 from django.http import HttpResponseRedirect
@@ -13,10 +11,6 @@ from django.conf import settings
 from django.shortcuts import render, render_to_response
 from django.forms.widgets import RadioSelect
 import datetime, rt
-
-
-#DOMAINS = [(d.id, d.name) for d in Domain.objects.all()]
-#OPTIONS = [(o.id, o.name) for o in Option.objects.all()]
 
 
 def index(request):    
@@ -40,7 +34,7 @@ def view(request):
 
     """ displaying all searches added """
 
-    test = Research.objects.all()
+    test = Research.objects.filter(is_done = False)
     
     return render(request, 'view.html',
               {'test' : test,

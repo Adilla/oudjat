@@ -21,7 +21,7 @@ class Command(NoArgsCommand):
             
         """ Job handling all researches """
 
-     #   service = build("customsearch", "v1",
+     #  service = build("customsearch", "v1",
      #                   developerKey="AIzaSyBGCWOxtQZomkXAVSLmyg1XI_obyTe5P4E")
         service = build("customsearch", "v1",
                         developerKey=args[0])
@@ -33,10 +33,10 @@ class Command(NoArgsCommand):
 
 
         for research in related_researches:
-            print research
-
+            
             # launching each research not yet done
             if research.is_done == False:
+                print research
                 _word = research.words
                 dkey = Domain.objects.filter(researches__words = _word)
            
@@ -134,9 +134,6 @@ class Command(NoArgsCommand):
                         break
 
  
-
-            
-        
 
         # changes the priority of each cron
         for cron in Crontab.objects.all():
