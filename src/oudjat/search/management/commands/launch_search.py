@@ -3,7 +3,7 @@ Command for job
 """
 
 from django.core.management.base import NoArgsCommand
-from search.models import Word, Domain, Research, Crontab 
+from search.models import Word, Domain, Search, Crontab 
 from report.models import Page, Result
 from apiclient.discovery import build
 import re, os, json
@@ -12,14 +12,14 @@ from django.utils import timezone
 
 class Command(NoArgsCommand):
     """
-    Command launching all researches 
+    Command launching all searches 
     """
 
     args = '<key>'
 
     def handle(self, *args, **options):
             
-        """ Job handling all researches """
+        """ Job handling all searches """
 
      #  service = build("customsearch", "v1",
      #                   developerKey="AIzaSyBGCWOxtQZomkXAVSLmyg1XI_obyTe5P4E")
@@ -27,18 +27,18 @@ class Command(NoArgsCommand):
                         developerKey=args[0])
 
         # Getting the cron to be runned (with priority = 0) 
-        # and the related researches
+        # and the related searches
         day_cron = Crontab.objects.get(priority = 0)
-        related_researches = Research.objects.filter(cron = day_cron)
+        related_searches = Search.objects.filter(cron = day_cron)
 
 
-        for research in related_researches:
+        for search in related_searches:
             
-            # launching each research not yet done
-            if research.is_done == False:
-                print research
-                _word = research.words
-                dkey = Domain.objects.filter(researches__words = _word)
+            # launching each search not yet done
+            if search.is_done == False:
+                print search
+                _word = search.words
+                dkey = Domain.objects.filter(searches__words = _word)
            
                 res = service.cse().list(
                     q = _word,
@@ -46,8 +46,8 @@ class Command(NoArgsCommand):
                     cx = dkey[0].key
                     ).execute()
             
-             #   research.is_done = True
-             #   research.save()
+             #   search.is_done = True
+             #   search.save()
 
                 # putting the results in file with Json format
                 with open('/tmp/'+ _word + '_1', 'w') as _file:

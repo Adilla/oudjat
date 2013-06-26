@@ -4,7 +4,7 @@ All views
 
 from django.http import HttpResponseRedirect
 from django.template import RequestContext
-from search.models import Word, Domain, Crontab, Research
+from search.models import Word, Domain, Crontab, Search
 from report.models import *
 from django import forms
 from django.conf import settings
@@ -34,7 +34,7 @@ def view(request):
 
     """ displaying all searches added """
 
-    test = Research.objects.filter(is_done = False)
+    test = Search.objects.filter(is_done = False)
     
     return render(request, 'view.html',
               {'test' : test,
@@ -180,9 +180,9 @@ def add(request):
                 num = Crontab.objects.count()
                 
                 if num == 0:
-                    _cron = Crontab(number_of_researches = 0, priority = 0)
+                    _cron = Crontab(number_of_searches = 0, priority = 0)
                 else:
-                    _cron = Crontab(number_of_researches = 0, priority = 1)
+                    _cron = Crontab(number_of_searches = 0, priority = 1)
                     for cron in Crontab.objects.all():
                         if cron.priority != 0:
                             cron.priority = cron.priority + 1
@@ -190,12 +190,12 @@ def add(request):
                
                 _cron.save()
                 
-            res = Research(name = word, words = word, cron = _cron)
+            res = Search(name = word, words = word, cron = _cron)
             res.save()
 
-            _cron.number_of_researches = _cron.number_of_researches + 1
+            _cron.number_of_searches = _cron.number_of_searches + 1
           
-            if _cron.number_of_researches == 100:
+            if _cron.number_of_searches == 100:
                 _cron.has_reached_limit = True
    
             _cron.save()

@@ -53,7 +53,7 @@ class Crontab(models.Model):
 
     """ Defining a cron """ 
 
-    number_of_researches = models.IntegerField()
+    number_of_searches = models.IntegerField()
     has_reached_limit = models.BooleanField(default = False)
     priority = models.IntegerField()
     
@@ -62,15 +62,15 @@ class Crontab(models.Model):
        return u'%s' % (self.id)
 
 
-class Research(models.Model):
+class Search(models.Model):
 
-    """ Defining a research """
+    """ Defining a search """
 
     name = models.CharField(max_length=255)
     cron = models.ForeignKey(Crontab, related_name= 'crons')
     words = models.CharField(max_length=255)
     domains = models.ManyToManyField(Domain, 
-                                     related_name = 'researches')
+                                     related_name = 'searches')
     is_done = models.BooleanField(default=False)
 
 
@@ -78,7 +78,7 @@ class Research(models.Model):
        return u'%s' % (self.name)
 
     class Meta:
-       verbose_name_plural = 'researches'
+       verbose_name_plural = 'searches'
 
 
 

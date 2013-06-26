@@ -6,7 +6,7 @@ Replace this with more appropriate tests for your application.
 """
 
 from django.test import TestCase
-from search.models import Crontab, Word, Research, Option, Domain
+from search.models import Crontab, Word, Search, Option, Domain
 from report.models import Page, Result
 from search.views import *
 from django.utils import timezone
@@ -29,11 +29,11 @@ class LaunchResearchTest(TestCase):
             description = 'test')
 
         self.cron = Crontab.objects.create(
-            number_of_researches = 0, 
+            number_of_searches = 0, 
             priority = 0)
 
         self.cron2 = Crontab.objects.create(
-            number_of_researches = 0, 
+            number_of_searches = 0, 
             priority = 1)
 
         self.daily = Crontab.objects.get(priority = 0)
@@ -43,11 +43,11 @@ class LaunchResearchTest(TestCase):
 
         self.domain = Domain.objects.create(name = 'test', key = 'test')
      
-        self.research = Research.objects.create(name = 'test', 
+        self.research = Search.objects.create(name = 'test', 
                                                 cron = self.cron,
                                                 words = 'test')
       
-        self.research2 = Research.objects.create(name = 'test2', 
+        self.research2 = Search.objects.create(name = 'test2', 
                                                  cron = self.cron2,
                                                  words = 'test2')
 
@@ -123,7 +123,7 @@ class LaunchResearchTest(TestCase):
         """ Testing returning string """
         self.assertEqual(self.word.__unicode__(), 'test')
         self.assertEqual(self.domain.__unicode__(), 'test')
-        self.assertEqual(self.research.__unicode__(), 'test')
+        self.assertEqual(self.search.__unicode__(), 'test')
         self.assertEqual(self.cron.__unicode__(), u'%s' % (self.cron.id))
         self.assertEqual(self.option.__unicode__(), 'test')
 
@@ -133,28 +133,28 @@ class LaunchResearchTest(TestCase):
         """ Testing that error is raised when wrong string is given """
         self.assertNotEqual(self.word.__unicode__(), 'test')
         self.assertNotEqual(self.domain.__unicode__(), 'test')
-        self.assertNotEqual(self.research.__unicode__(), 'test')
+        self.assertNotEqual(self.search.__unicode__(), 'test')
         self.assertNotEqual(self.cron.__unicode__(), u'%s' % (self.cron.id))
         self.assertNotEqual(self.option.__unicode__(), 'test')
 
 
 
 
-    def test_research(self): 
+    def test_search(self): 
 
-        """ Testing that boolean value of a research is correct """
+        """ Testing that boolean value of a search is correct """
 
         cmpt = 1
-        for obj in Research.objects.all():
+        for obj in Search.objects.all():
             self.assertFalse(obj.is_done)
 
             if cmpt == 1:
-                self.assertEqual(obj, self.research)
-                self.assertNotEqual(obj, self.research2)
+                self.assertEqual(obj, self.search)
+                self.assertNotEqual(obj, self.search2)
 
             if cmpt == 2:
-                self.assertNotEqual(obj, self.research)
-                self.assertEqual(obj, self.research2)
+                self.assertNotEqual(obj, self.search)
+                self.assertEqual(obj, self.search2)
 
             cmpt = cmpt + 1
 
