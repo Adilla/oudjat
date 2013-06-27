@@ -15,9 +15,9 @@ import datetime
 import unittest
 
 
-class LaunchResearchTest(TestCase):
+class LaunchSearchTest(TestCase):
 
-    """ Class test for launch_research.py """
+    """ Class test for launch_search.py """
     
     def setUp(self):
 
@@ -43,11 +43,11 @@ class LaunchResearchTest(TestCase):
 
         self.domain = Domain.objects.create(name = 'test', key = 'test')
      
-        self.research = Search.objects.create(name = 'test', 
+        self.search = Search.objects.create(name = 'test', 
                                                 cron = self.cron,
                                                 words = 'test')
       
-        self.research2 = Search.objects.create(name = 'test2', 
+        self.search2 = Search.objects.create(name = 'test2', 
                                                  cron = self.cron2,
                                                  words = 'test2')
 

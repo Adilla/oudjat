@@ -89,12 +89,26 @@ TEMPLATE_LOADERS = (
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'django_cas.middleware.CASMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.doc.XViewMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'django_cas.backends.CASBackend',
+)
+
+CAS_SERVER_URL = 'https://cas.unistra.fr/cas/'
+CAS_ADMIN_PREFIX = 'http://localhost:8000/admin/'
+
+LOGIN_URL = '/accounts/login'
+
+CAS_LOGOUT_REQUEST_ALLOWED = ('lb1.u-strasbg.fr', 'lb2.u-strasbg.fr')
 
 ROOT_URLCONF = 'oudjat.urls'
 
@@ -120,6 +134,7 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
     'django_jenkins',
+    'django_cas',
     'report',
     'search',
 )

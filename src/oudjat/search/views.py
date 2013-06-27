@@ -11,8 +11,10 @@ from django.conf import settings
 from django.shortcuts import render, render_to_response
 from django.forms.widgets import RadioSelect
 import datetime, rt
+from django.contrib.auth.decorators import login_required
 
 
+@login_required
 def index(request):    
 
     """ main page """
@@ -29,7 +31,7 @@ def clean(self):
     data = self.cleaned.data
     return data
 
-
+@login_required
 def view(request):
 
     """ displaying all searches added """
@@ -41,7 +43,7 @@ def view(request):
                })
 
 
-
+@login_required
 def results(request):
     """ displaying reports per date """
 
@@ -51,6 +53,7 @@ def results(request):
             'dates' : dates,
             })
 
+@login_required
 def report_details(request, year, month, day):
 
     """ displaying details of report """
@@ -81,7 +84,7 @@ class TicketForm(forms.Form):
     text = forms.CharField(widget = forms.Textarea)
     requestor = forms.CharField(max_length = 255)
 
-
+@login_required
 def ticket(request, year, month, day, pageid):
     """ Handling RT tickets """
 
@@ -100,9 +103,14 @@ def ticket(request, year, month, day, pageid):
             login = 'admin'
             passw = 'admin'
  
+          #  tracker = rt.Rt(
+          #      'http://rt.easter-eggs.org/demos/testing/REST/1.0/', 
+          #      login, 
+          #      passw)
+
             tracker = rt.Rt(
-                'http://rt.easter-eggs.org/demos/testing/REST/1.0/', 
-                login, 
+                'http://rtdev.unistra.fr/rt/REST/1.0',
+                login,
                 passw)
                 
             if tracker.login() == True:
@@ -153,7 +161,7 @@ class AddForm(forms.Form):
             (d.id, d.name) for d in Domain.objects.all()
             ]
 
-
+@login_required
 def add(request):
 
     """ Handling the add of a new search """
