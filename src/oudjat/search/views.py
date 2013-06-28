@@ -12,15 +12,21 @@ from django.shortcuts import render, render_to_response
 from django.forms.widgets import RadioSelect
 import datetime, rt
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 
 
 @login_required
 def index(request):    
 
     """ main page """
-    
+    user = request.user.username
+    first = request.user.first_name
+    last = request.user.last_name
     return render(request, 'index.html',
-              {})
+              {'user' : user,
+               'first' : first,
+               'last' : last,
+               })
 
 
 def clean(self):
@@ -35,29 +41,44 @@ def clean(self):
 def view(request):
 
     """ displaying all searches added """
-
+    user = request.user.username
+    first = request.user.first_name
+    last = request.user.last_name
+   
     test = Search.objects.filter(is_done = False)
     
     return render(request, 'view.html',
               {'test' : test,
+               'user' : user,
+               'first' : first,
+               'last' : last,
                })
 
 
 @login_required
 def results(request):
     """ displaying reports per date """
+    user = request.user.username
+    first = request.user.first_name
+    last = request.user.last_name
 
     dates = Result.objects.dates('date', 'day', order = 'DESC')
      
     return render(request, 'results.html', {
             'dates' : dates,
+            'user' : user,
+            'first' : first,
+            'last' : last,
             })
 
 @login_required
 def report_details(request, year, month, day):
 
     """ displaying details of report """
-   
+    user = request.user.username
+    first = request.user.first_name
+    last = request.user.last_name
+
     _year = int(year)
     _month = int(month)
     _day = int(day)
@@ -71,6 +92,9 @@ def report_details(request, year, month, day):
                                'y' : _year,
                                'm' : _month,
                                'd' : _day,
+                               'user' : user,
+                               'first' : first,
+                               'last' : last,
                               },
                              context_instance = RequestContext(request))
 
@@ -87,6 +111,9 @@ class TicketForm(forms.Form):
 @login_required
 def ticket(request, year, month, day, pageid):
     """ Handling RT tickets """
+    user = request.user.username
+    first = request.user.first_name
+    last = request.user.last_name
 
     page = Page.objects.get(pk = int(pageid))
 
@@ -100,8 +127,8 @@ def ticket(request, year, month, day, pageid):
             text = form.cleaned_data['text']
             requestor = form.cleaned_data['requestor']
   
-            login = 'admin'
-            passw = 'admin'
+            login = user
+            passw = request.user.password
  
           #  tracker = rt.Rt(
           #      'http://rt.easter-eggs.org/demos/testing/REST/1.0/', 
@@ -109,7 +136,7 @@ def ticket(request, year, month, day, pageid):
           #      passw)
 
             tracker = rt.Rt(
-                'http://rtdev.unistra.fr/rt/REST/1.0',
+                'https://rtdev.unistra.fr/rt/REST/1.0/',
                 login,
                 passw)
                 
@@ -133,7 +160,7 @@ def ticket(request, year, month, day, pageid):
         form = TicketForm(initial={'subject': page.sitename,
                                    'queue': settings.FILE_RT,
                                    'text': page.path,
-                                   'requestor': 'admin@no-mail.com'})
+                                   'requestor': request.user.email})
 
     return render_to_response('ticket.html',
                               {'form' : form,
@@ -141,7 +168,11 @@ def ticket(request, year, month, day, pageid):
                                'y': year,
                                'm': month,
                                'd': day,
-                               'id': pageid},
+                               'id': pageid,
+                               'user' : user,
+                               'first' : first,
+                               'last' : last,
+                               },
                               context_instance = RequestContext(request))
     
 
@@ -165,6 +196,9 @@ class AddForm(forms.Form):
 def add(request):
 
     """ Handling the add of a new search """
+    user = request.user.username
+    first = request.user.first_name
+    last = request.user.last_name
 
     if request.method == 'POST':
         form = AddForm(request.POST)
@@ -216,7 +250,10 @@ def add(request):
         form = AddForm()
 
     return render_to_response('add.html',
-                              {'form' : form,}, 
+                              {'form' : form,
+                               'user' : user,
+                               'first' : first,
+                               'last' : last,}, 
                               context_instance=RequestContext(request)
                               )
         

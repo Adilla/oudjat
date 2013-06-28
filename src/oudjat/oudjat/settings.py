@@ -106,7 +106,7 @@ AUTHENTICATION_BACKENDS = (
 CAS_SERVER_URL = 'https://cas.unistra.fr/cas/'
 CAS_ADMIN_PREFIX = 'http://localhost:8000/admin/'
 
-LOGIN_URL = '/accounts/login'
+LOGIN_URL = '/accounts/login/'
 
 CAS_LOGOUT_REQUEST_ALLOWED = ('lb1.u-strasbg.fr', 'lb2.u-strasbg.fr')
 
